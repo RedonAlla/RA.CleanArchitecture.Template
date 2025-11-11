@@ -23,9 +23,9 @@ The template is highly configurable, allowing developers to tailor the generated
   * **Extensibility**: Designed to be easily extended for real-world projects, whether you're building REST APIs, microservices, or enterprise apps.
 
 ## 🚀 Ideal For
-•⁠  ⁠Developers looking for a clean, opinionated.NET template
-•⁠  ⁠Teams adopting Clean Architecture for long-term scalability
-•⁠  ⁠Projects that require separation of concerns and testability from day one
+  * ⁠Developers looking for a clean, opinionated.NET template
+  * ⁠Teams adopting Clean Architecture for long-term scalability
+  * ⁠Projects that require separation of concerns and testability from day one
 
 The project structure is modular. For instance, if you disable `UseIntegrations`, the entire `RaTemplate.Integration` project is excluded. Similarly, the persistence and authorization components are only included if you select them, keeping the final solution clean and free of unused code.
 
