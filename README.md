@@ -1,6 +1,6 @@
 # RA.CleanArchitecture.Template
 
-**RA.Clean.Architecture.Template** is a robust.NET solution template designed to streamline development using Clean Architecture principles.
+**RA.Clean.Architecture.Template** is a robust .NET solution template designed to streamline development using Clean Architecture principles.
 Provides a well-structured starting point for building scalable and maintainable .NET applications.
 
 This approach emphasizes a separation of concerns, placing business logic at the center of the application and making it independent of infrastructure details like databases or external services.
@@ -29,6 +29,83 @@ The template is highly configurable, allowing developers to tailor the generated
 
 The project structure is modular. For instance, if you disable `UseIntegrations`, the entire `RaTemplate.Integration` project is excluded. Similarly, the persistence and authorization components are only included if you select them, keeping the final solution clean and free of unused code.
 
+## 🚀 Getting Started: A User Guide
+
+This guide will walk you through installing and using the template to create a new Web API project.
+
+### 1. Prerequisites
+
+Make sure you have the **.NET 10.0 SDK** or a later version installed on your machine.
+
+### 2. Installation
+
+You can install the template directly from the source code repository or from NuGet once it's published.
+
+*   **Local Installation (from source):**
+    Clone the repository and run the following command from the root directory of the template project:
+    ```bash
+    dotnet new install .
+    ```
+
+*   **NuGet Installation:**
+    Once published, you can install it using this command:
+    ```bash
+    dotnet new install RA.CleanArchitecture.Template
+    ```
+
+### 3. Creating a New Project
+
+After installation, you can create a new project using the `dotnet new` command.
+
+The basic command is:
+```bash
+dotnet new RA.Template -n YourProjectName
+```
+This will create a new solution in a folder named `YourProjectName` with the default settings (JWT Authorization, EF Core with SQL Server, Scalar UI, and HTTP Integrations).
+
+### 4. Customizing Your Project with Parameters
+
+You can customize the generated project by passing parameters to the `dotnet new` command.
+
+**Example 1: Project with Dapper, Oracle, and no Authorization**
+
+This command scaffolds a project that uses Dapper for data access with an Oracle database and disables JWT authorization.
+
+```bash
+dotnet new RA.Template -n MyDapperApi --UsePersistence DapperOracle --UseAuthorization false
+```
+
+**Example 2: Project with both EF Core and Dapper for SQL Server**
+
+The template supports multiple persistence options. This is useful if you need to use EF for some parts of your application and Dapper for performance-critical queries.
+
+```bash
+dotnet new RA.Template -n MyHybridApi --UsePersistence EfSqlServer --UsePersistence DapperSqlServer
+```
+
+**Example 3: A minimal API without Persistence or Integrations**
+
+```bash
+dotnet new RA.Template -n MyMinimalApi --UsePersistence "" --UseIntegrations false
+```
+
+### 5. Running Your New Application
+
+1.  **Navigate to the project directory**:
+    `cd YourProjectName`
+2.  **Restore Dependencies**:
+    `dotnet restore`
+3.  **Configure Settings**: Open `src/Web/YourProjectName.Api/appsettings.Development.json` and update the `ConnectionStrings` section if you are using a persistence layer.
+4.  **Run the application**:
+    `dotnet run --project src/Web/YourProjectName.Api/YourProjectName.Api.csproj`
+5.  **Access the API**: The application will be running on the configured port (e.g., `https://localhost:7001`). You can access the OpenAPI documentation at `https://localhost:7001/openapi-ui`.
+
+### 6. Uninstalling the Template
+
+To remove the template from your machine, run the following command:
+```bash
+dotnet new uninstall RA.CleanArchitecture.Template
+```
 
 ## 🌳 RA.CleanArchitecture.Template Source Tree
 
@@ -75,4 +152,14 @@ RA.CleanArchitecture.Template/
   * **`Web/RaTemplate.Api/`**: This is the entry point of your application—the API project. It handles HTTP requests, routing, and calls into the Application layer. It depends on the Application and Infrastructure layers for dependency injection setup.
 
 ## 🧠 Summary
-In summary, **RA. Clean Architecture Template** template provides a robust and customizable foundation for developing modern, maintainable, and scalable .NET Web APIs.
+In summary, **RA.CleanArchitecture.Template** template provides a robust and customizable foundation for developing modern, maintainable, and scalable .NET Web APIs.
+
+## ⚙️ Template Parameters
+
+| Parameter | Display Name | Description | Type | Default Value | Available Choices |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `Framework` | .NET Target Framework | Select the target framework for the project. | Choice | `.NET 10` | `.NET 10` |
+| `UseAuthorization` | JWT Authorization | Includes JWT-based authorization services and middleware. | Boolean | `true` | `true`, `false` |
+| `UseIntegrations` | Use HTTP Client Integration? | Adds infrastructure for building and consuming external HTTP services. | Boolean | `true` | `true`, `false` |
+| `OpenApiUI` | OpenApi documentation UI. | Selects the user interface for the OpenAPI (Swagger) documentation. | Choice | `scalar` | `scalar`, `swagger` |
+| `UsePersistence` | Persistence Layer | Selects the data access technology. Multiple choices can be selected. | Choice | `EfSqlServer` | `EF with SQL Server`, `EF with Oracle`, `Dapper with SQL Server`, `Dapper with Oracle` |
