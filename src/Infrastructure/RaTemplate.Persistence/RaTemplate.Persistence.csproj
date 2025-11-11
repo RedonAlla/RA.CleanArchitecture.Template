@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--#if (UseEfSqlServer) -->
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+  </ItemGroup>
+  <!--#endif -->
+
+  <ItemGroup>
+    <PackageReference Include="RA.Utilities.Data.EntityFramework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Core/RaTemplate.Application/RaTemplate.Application.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="RA.Utilities.Data.Entities" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Entities/" />
+  </ItemGroup>
+</Project>

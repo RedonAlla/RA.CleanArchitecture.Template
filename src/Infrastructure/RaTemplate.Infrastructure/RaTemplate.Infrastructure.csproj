@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+<!--#if (!UseIntegrations || !UseAnyPersistence) -->
+    <ProjectReference Include="../../Core/AClArchTemplate.Application/AClArchTemplate.Application.csproj" />
+<!--#endif -->
+<!--#if (UseIntegrations) -->
+    <ProjectReference Include="../RaTemplate.Integration/RaTemplate.Integration.csproj" />
+<!--#endif -->
+<!--#if (UseAnyPersistence) -->
+    <ProjectReference Include="../RaTemplate.Persistence/RaTemplate.Persistence.csproj" />
+<!--#endif -->
+  </ItemGroup>
+
+</Project>

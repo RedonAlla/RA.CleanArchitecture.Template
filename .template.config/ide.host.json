@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json.schemastore.org/vs-2017.3.host",
+  "icon": "icon.png",
+  "learnMoreLink": "https://redonalla.github.io/RA.Utilities/vs-template/intro",
+  "symbolInfo": [
+    {
+      "id": "OpenApiUI",
+      "choices": [
+        {
+          "choice": "swagger",
+          "isEnabled": "false"
+        }
+      ]
+    },
+    {
+      "id": "UseAuthorization",
+      "isVisible": "true"
+    },
+    {
+      "id": "UseScalarUI",
+      "isVisible": "false"
+    },
+    {
+      "id": "SwaggerUI",
+      "isVisible": "false"
+    }
+  ]
+}

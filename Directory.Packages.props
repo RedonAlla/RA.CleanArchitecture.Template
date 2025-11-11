@@ -2,28 +2,30 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
-<!--#if (UseIntegrations) -->
+  <!--#if (UseIntegrations) -->
   <ItemGroup>
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0-rc.2.25502.107" />
     <PackageVersion Include="RA.Utilities.Integrations" Version="10.0.0-rc.2" />
   </ItemGroup>
-<!--#endif -->
-
-<!--#if (UseAnyPersistence) -->
+  <!--#endif -->
+  <!--#if (UseAnyPersistence) -->
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Data.Entities" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Data.Abstractions" Version="10.0.0-rc.2" />
   </ItemGroup>
-<!--#endif -->
-
-<!--#if (UseEfSqlServer) -->
+  <!--#endif -->
+  <!--#if (UseEfSqlServer) -->
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Data.EntityFramework" Version="10.0.9-rc" />
     <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0-rc.2.25502.107" />
   </ItemGroup>
-<!--#endif -->
-
+  <!--#endif -->
+  <!--#if (UseAuthorization) -->
+  <ItemGroup>
+    <PackageVersion Include="RA.Utilities.Authorization" Version="10.0.0-rc.2" />
+    <PackageVersion Include="RA.Utilities.Authentication.JwtBearer" Version="10.0.0-rc.2" />
+  </ItemGroup>
+    <!--#endif -->
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Api" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.OpenApi" Version="10.0.0-rc.2" />
@@ -31,10 +33,9 @@
     <PackageVersion Include="RA.Utilities.Api.Middlewares" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Feature" Version="10.0.0-rc.2" />
   </ItemGroup>
-  
   <ItemGroup>
     <!--#if (UseScalarUI) -->
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.10.0" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.10.3" />
     <!--#endif -->
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.0-rc.2.25502.107" />

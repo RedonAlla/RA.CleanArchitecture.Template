@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Redon Alla",
+  "classifications": ["web", "api"],
+  "identity": "RA.CleanArchitecture.Template",
+  "name": "RA. Clean Architecture Template",
+  "shortName": "RA.Template",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "defaultName": "RaTemplate",
+  "sourceName": "VsClArchTemplate",
+  "description": "Template for building Web Api with Clean Architecture",
+  "preferNameDirectory": true,
+  "symbols": {
+    "Framework": {
+      "type": "parameter",
+      "displayName": ".NET Target Framework",
+      "description": "Select the target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "net10.0",
+          "displayName": ".NET 10",
+          "description": "Use .NET 10 Target framework for your project"
+        }
+      ],
+      "replaces": "net10.0",
+      "defaultValue": "net10.0"
+    },
+    "UseAuthorization": {
+      "type": "parameter",
+      "description": "Use JWT Authorization",
+      "displayName": "JWT Authorization",
+      "defaultValue": "true",
+      "datatype": "bool"
+    },
+    "UseIntegrations": {
+      "type": "parameter",
+      "displayName": "Use HTTP Client Integration?",
+      "description": "Add infrastructure to build HTTP Clients Integration.",
+      "defaultValue": "true",
+      "datatype": "bool"
+    },
+    "OpenApiUI": {
+      "type": "parameter",
+      "displayName": "OpenApi documentation UI.",
+      "description": "Select UI for OpenApi documentation.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "scalar",
+          "displayName": "Scalar",
+          "description": "Use Scalar as UI for API documentation and tests."
+        },
+        {
+          "choice": "swagger",
+          "displayName": "Swagger",
+          "description": "Use Swagger as UI for API documentation and tests. NOT YET SUPPORTED"
+        }
+      ],
+      "defaultValue": "scalar"
+    },
+    "UsePersistence": {
+      "type": "parameter",
+      "displayName": "Persistence Layer",
+      "description": "Select the persistence layer implementation(s).",
+      "datatype": "choice",
+      "allowMultipleValues": true,
+      "choices": [
+        {
+          "choice": "EfSqlServer",
+          "displayName": "EF with SQL Server",
+          "description": "Use Entity Framework with SQL Server"
+        },
+        {
+          "choice": "EfOracle",
+          "displayName": "EF with Oracle",
+          "description": "Use Entity Framework with Oracle"
+        },
+        {
+          "choice": "DapperSqlServer",
+          "displayName": "Dapper with SQL Server",
+          "description": "Use Dapper with SQL Server"
+        },
+        {
+          "choice": "DapperOracle",
+          "displayName": "Dapper with Oracle",
+          "description": "Use Dapper with Oracle"
+        }
+      ],
+      "defaultValue": "EfSqlServer"
+    },
+    "UseScalarUI": {
+      "type": "computed",
+      "value": "(OpenApiUI == \"scalar\")"
+    },
+    "SwaggerUI": {
+      "type": "computed",
+      "value": "(OpenApiUI == \"swagger\")"
+    },
+    "UseEfSqlServer": {
+      "type": "computed",
+      "value": "UsePersistence.indexOf('EfSqlServer') > -1"
+    },
+    "UseEfOracle": {
+      "type": "computed",
+      "value": "UsePersistence.indexOf('EfOracle') > -1"
+    },
+    "UseDapperSqlServer": {
+      "type": "computed",
+      "value": "UsePersistence.indexOf('DapperSqlServer') > -1"
+    },
+    "UseDapperOracle": {
+      "type": "computed",
+      "value": "UsePersistence.indexOf('DapperOracle') > -1"
+    },
+    "UseAnyPersistence": {
+      "type": "computed",
+      "value": "UsePersistence.length > 0"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "condition": "(!UseScalarUI)",
+          "exclude": [
+            "src/Web/RaTemplate.Api/Extensions/OpenApiExtensions.cs"
+          ]
+        },
+        {
+          "condition": "(!UseIntegrations)",
+          "exclude": [
+            "src/Infrastructure/RaTemplate.Integration/**"
+          ]
+        },
+        {
+          "condition": "(!UseAnyPersistence)",
+          "exclude": [
+            "src/Infrastructure/RaTemplate.Persistence/**"
+          ]
+        },
+        {
+          "condition": "(!UseAuthorization)",
+          "exclude": [
+            "src/Web/RaTemplate.Api/Extensions/AuthorizationExtensions.cs"
+          ]
+        },
+        {
+          "exclude": [
+            "**/[Bb]in/**",
+            "**/[Oo]bj/**",
+            ".template.config/**/*",
+            "**/*.filelist",
+            "**/*.user",
+            "**/*.lock.json"
+          ]
+        }
+      ]
+    }
+  ],
+  "primaryOutputs": [
+    { "path": "src/Web/RaTemplate.Api/RaTemplate.Api.csproj" },
+    { "path": "src/Web/RaTemplate.Api/README.md" }
+  ],
+  "postActions": [
+    {
+      "actionId": "D396686C-DE0E-4DE6-906A-29C1699A8DB6",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [ { "text": "Run 'dotnet restore'" } ],
+      "continueOnError": true
+    },
+    {
+      "description": "Opens README.md in the editor",
+      "manualInstructions": [ ],
+      "actionId": "84C0DA21-51C8-4541-9940-6CA19AF04EE6",
+      "args": {
+        "files": "1"
+      },
+      "continueOnError": true
+    }
+  ]
+}

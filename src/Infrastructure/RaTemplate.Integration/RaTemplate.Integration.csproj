@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="RA.Utilities.Integrations" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="../../Core/RaTemplate.Application/RaTemplate.Application.csproj" />
+  </ItemGroup>
+</Project>
