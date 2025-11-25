@@ -1,5 +1,3 @@
-using System;
-
 namespace VsClArch.Template.Api.Constants;
 
 internal static class Polices

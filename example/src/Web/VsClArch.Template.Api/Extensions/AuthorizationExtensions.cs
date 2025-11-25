@@ -1,9 +1,6 @@
-using System;
 using Microsoft.AspNetCore.Authorization;
 using VsClArch.Template.Api.Authorization;
 using VsClArch.Template.Api.Constants;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using RA.Utilities.Authorization.Extensions;
 
 namespace VsClArch.Template.Api.Extensions;
