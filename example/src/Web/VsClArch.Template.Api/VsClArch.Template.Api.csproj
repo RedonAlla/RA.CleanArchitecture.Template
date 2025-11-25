@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
+    <PackageReference Include="RA.Utilities.Api" />
+    <PackageReference Include="RA.Utilities.Api.Middlewares" />
+    <PackageReference Include="RA.Utilities.Api.Results" />
+    <PackageReference Include="RA.Utilities.Authentication.JwtBearer" />
+    <PackageReference Include="RA.Utilities.Authorization" />
+    <PackageReference Include="RA.Utilities.Core.Constants" />
+    <PackageReference Include="RA.Utilities.Logging.Core" />
+    <PackageReference Include="RA.Utilities.OpenApi" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Scalar.AspNetCore" />
+    <PackageReference Include="Serilog.Enrichers.Sensitive" />
+
+    <!-- BKT Packages -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Infrastructure/VsClArch.Template.Infrastructure/VsClArch.Template.Infrastructure.csproj" />
+    <ProjectReference Include="../VsClArch.Template.Api.Contracts/VsClArch.Template.Api.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

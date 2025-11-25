@@ -1,0 +1,942 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Open Api Title",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/todos": {
+      "post": {
+        "tags": [
+          "Todos"
+        ],
+        "summary": "Create",
+        "description": "Create a new Todo item.",
+        "operationId": "CreateNewTodo",
+        "parameters": [
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "description": "ID of the request, unique to the call, as determined by the initiating party.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "775e7cdb-8d45-43b2-b0f4-187053e339ad"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTodoRequest"
+              },
+              "examples": {
+                "SimpleTodo": {
+                  "summary": "A simple todo item",
+                  "description": "This is an example of a minimal todo item, only providing the description.",
+                  "value": {
+                    "Description": "Buy milk",
+                    "DueDate": null,
+                    "Labels": null,
+                    "IsCompleted": false
+                  }
+                },
+                "TodoWithLabelsAndDueDate": {
+                  "summary": "A more complete todo item",
+                  "description": "This is an example of a todo item with labels and a due date.",
+                  "value": {
+                    "Description": "Finish project report",
+                    "DueDate": "2025-11-28T20:50:35.858454+01:00",
+                    "Labels": [
+                      "work",
+                      "urgent"
+                    ],
+                    "IsCompleted": false
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                },
+                "examples": {
+                  "MinimumLengthValidator": {
+                    "summary": "MinimumLengthValidator",
+                    "description": "This is an example of a bad request due to a validation error.",
+                    "value": {
+                      "ResponseCode": 400,
+                      "ResponseType": "BadRequest",
+                      "ResponseMessage": "The request is invalid.",
+                      "Result": [
+                        {
+                          "PropertyName": "Description",
+                          "ErrorMessage": "The length of 'Description' must be at least 5 characters. You entered 3 characters.",
+                          "AttemptedValue": "Buy",
+                          "ErrorCode": "MinimumLengthValidator"
+                        }
+                      ]
+                    }
+                  },
+                  "GreaterThanOrEqualValidator": {
+                    "summary": "GreaterThanOrEqualValidator",
+                    "description": "This is an example of a bad request due to a validation error.",
+                    "value": {
+                      "ResponseCode": 400,
+                      "ResponseType": "BadRequest",
+                      "ResponseMessage": "The request is invalid.",
+                      "Result": [
+                        {
+                          "PropertyName": "DueDate",
+                          "ErrorMessage": "'Due Date' must be greater than or equal to '17.9.2025 00:00:00'.",
+                          "AttemptedValue": "2025-09-15T20:29:19.36846+02:00",
+                          "ErrorCode": "GreaterThanOrEqualValidator"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "InternalServerError": {
+                    "summary": "Internal server error",
+                    "description": "This is an example of a general error.",
+                    "value": {
+                      "ResponseCode": 500,
+                      "ResponseType": "Error",
+                      "ResponseMessage": "Something happened on our end.",
+                      "Result": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          { }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Todos"
+        ],
+        "summary": "Get List",
+        "description": "Get list of TODOs.",
+        "operationId": "GetTodoList",
+        "parameters": [
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "description": "ID of the request, unique to the call, as determined by the initiating party.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "775e7cdb-8d45-43b2-b0f4-187053e339ad"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetTodosOutput"
+                  }
+                },
+                "examples": {
+                  "ListOfTodosExample": {
+                    "summary": "List of TODOs",
+                    "description": "This is an example of a todo list response.",
+                    "value": [
+                      {
+                        "Id": "e66b3e67-e760-4750-9ba4-7e14273a3e42",
+                        "UserId": "e2dcb79e-5537-4d45-8142-cd650606ce66",
+                        "Description": "Todo Example 2",
+                        "DueDate": "2025-12-15T19:50:35.887042Z",
+                        "Labels": [
+                          "FrontEnd",
+                          "Backend"
+                        ],
+                        "IsCompleted": false,
+                        "CreatedAt": "2025-11-25T00:00:00+01:00",
+                        "CompletedAt": "0001-01-01T00:00:00"
+                      },
+                      {
+                        "Id": "db08e0fb-cd57-4cf6-95f0-97291c4ab822",
+                        "UserId": "6cfef384-e2f7-4184-a9bc-4fb68a1a73c8",
+                        "Description": "Todo Example 1",
+                        "DueDate": "2025-12-15T19:50:35.887105Z",
+                        "Labels": [
+                          "FrontEnd",
+                          "Backend"
+                        ],
+                        "IsCompleted": false,
+                        "CreatedAt": "2025-11-23T00:00:00+01:00",
+                        "CompletedAt": "0001-01-01T00:00:00"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "InternalServerError": {
+                    "summary": "Internal server error",
+                    "description": "This is an example of a general error.",
+                    "value": {
+                      "ResponseCode": 500,
+                      "ResponseType": "Error",
+                      "ResponseMessage": "Something happened on our end.",
+                      "Result": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/todos/{id}": {
+      "put": {
+        "tags": [
+          "Todos"
+        ],
+        "summary": "Edit",
+        "description": "Edit a new Todo item.",
+        "operationId": "EditTodo",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "description": "ID of the request, unique to the call, as determined by the initiating party.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "775e7cdb-8d45-43b2-b0f4-187053e339ad"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditTodoRequest"
+              },
+              "examples": {
+                "SimpleTodo": {
+                  "summary": "A simple todo item",
+                  "description": "This is an example of a minimal todo item, only providing the description.",
+                  "value": {
+                    "Description": "Buy milk",
+                    "DueDate": null,
+                    "Labels": null,
+                    "IsCompleted": false
+                  }
+                },
+                "TodoWithLabelsAndDueDate": {
+                  "summary": "A more complete todo item",
+                  "description": "This is an example of a todo item with labels and a due date.",
+                  "value": {
+                    "Description": "Finish project report",
+                    "DueDate": "2025-11-28T20:50:35.890912+01:00",
+                    "Labels": [
+                      "work",
+                      "urgent"
+                    ],
+                    "IsCompleted": false
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditTodoOutput"
+                },
+                "examples": {
+                  "SuccessfulEdit": {
+                    "summary": "A successfully edited todo item",
+                    "description": "This is an example of a todo item after a successful edit.",
+                    "value": {
+                      "Description": "Finish project report and send for review",
+                      "DueDate": "2025-11-27T20:50:35.890991+01:00",
+                      "Labels": [
+                        "work",
+                        "urgent",
+                        "review"
+                      ],
+                      "IsCompleted": false,
+                      "CreatedAt": "2025-11-20T20:50:35.891004+01:00"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                },
+                "examples": {
+                  "MinimumLengthValidator": {
+                    "summary": "MinimumLengthValidator",
+                    "description": "This is an example of a bad request due to a validation error.",
+                    "value": {
+                      "ResponseCode": 400,
+                      "ResponseType": "BadRequest",
+                      "ResponseMessage": "The request is invalid.",
+                      "Result": [
+                        {
+                          "PropertyName": "Description",
+                          "ErrorMessage": "The length of 'Description' must be at least 5 characters. You entered 3 characters.",
+                          "AttemptedValue": "Buy",
+                          "ErrorCode": "MinimumLengthValidator"
+                        }
+                      ]
+                    }
+                  },
+                  "GreaterThanOrEqualValidator": {
+                    "summary": "GreaterThanOrEqualValidator",
+                    "description": "This is an example of a bad request due to a validation error.",
+                    "value": {
+                      "ResponseCode": 400,
+                      "ResponseType": "BadRequest",
+                      "ResponseMessage": "The request is invalid.",
+                      "Result": [
+                        {
+                          "PropertyName": "DueDate",
+                          "ErrorMessage": "'Due Date' must be greater than or equal to '17.9.2025 00:00:00'.",
+                          "AttemptedValue": "2025-09-15T20:29:19.36846+02:00",
+                          "ErrorCode": "GreaterThanOrEqualValidator"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "InternalServerError": {
+                    "summary": "Internal server error",
+                    "description": "This is an example of a general error.",
+                    "value": {
+                      "ResponseCode": 500,
+                      "ResponseType": "Error",
+                      "ResponseMessage": "Something happened on our end.",
+                      "Result": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          { }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Todos"
+        ],
+        "summary": "Get by Id",
+        "description": "Get a TODO item by id.",
+        "operationId": "GetTodoById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "x-request-id",
+            "in": "header",
+            "description": "ID of the request, unique to the call, as determined by the initiating party.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "775e7cdb-8d45-43b2-b0f4-187053e339ad"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "x-request-id": {
+                "description": "Returns a request ID that can be used to track the request. It is the same value as the `x-request-id` in the request.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "fea34172-3500-479b-a4cf-1cc51be75918"
+                }
+              },
+              "trace-id": {
+                "description": "Returns a trace ID that can be used to track the request internally.",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uuid",
+                  "example": "136a995a-cad6-4703-88ef-720cafb5e2f1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          { }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BadRequestResponse": {
+        "type": "object",
+        "properties": {
+          "responseCode": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32",
+            "default": 400
+          },
+          "responseType": {
+            "$ref": "#/components/schemas/ResponseType"
+          },
+          "responseMessage": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": "The request is invalid."
+          },
+          "result": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/BadRequestResult"
+            }
+          }
+        }
+      },
+      "BadRequestResult": {
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "attemptedValue": { },
+          "errorCode": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateTodoRequest": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the description of the Todo item."
+          },
+          "dueDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Gets or sets the optional due date for the Todo item.",
+            "format": "date-time"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the list of labels for the Todo item."
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the Todo item is completed."
+          }
+        },
+        "description": "Represents the request payload for creating a new Todo item."
+      },
+      "EditTodoOutput": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Gets or sets the user ID associated with the Todo item.",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the description of the Todo item."
+          },
+          "dueDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Gets or sets the optional due date for the Todo item.",
+            "format": "date-time"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the list of labels for the Todo item."
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the Todo item is completed."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Gets or sets the creation date of the Todo item.",
+            "format": "date-time"
+          }
+        },
+        "description": "Represents the output after editing a Todo item."
+      },
+      "EditTodoRequest": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the updated description of the Todo item."
+          },
+          "dueDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Gets or sets the updated optional due date for the Todo item.",
+            "format": "date-time"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the updated list of labels for the Todo item."
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the Todo item is completed."
+          }
+        },
+        "description": "Represents the request payload for editing an existing Todo item."
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "responseCode": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32",
+            "default": 500
+          },
+          "responseType": {
+            "$ref": "#/components/schemas/ResponseType"
+          },
+          "responseMessage": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": "Something happened on our end."
+          },
+          "result": { }
+        }
+      },
+      "GetTodosOutput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the unique identifier for the Todo item.",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Gets or sets the user ID associated with the Todo item.",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "description": "Gets or sets the description of the Todo item."
+          },
+          "dueDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "description": "Gets or sets the optional due date for the Todo item.",
+            "format": "date-time"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Gets or sets the list of labels for the Todo item."
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the Todo item is completed."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Gets or sets the creation date of the Todo item.",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "description": "Gets or sets the date when the Todo item was completed.",
+            "format": "date-time"
+          }
+        },
+        "description": "Represents the data transfer object for a single Todo item."
+      },
+      "ResponseType": {
+        "enum": [
+          "Success",
+          "Validation",
+          "Problem",
+          "NotFound",
+          "Conflict",
+          "Database",
+          "Unauthorized",
+          "Unknown",
+          "Error",
+          "BadRequest"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme. Example: 'Authorization: Bearer {token}'",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Todos"
+    }
+  ]
+}

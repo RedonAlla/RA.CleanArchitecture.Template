@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../../Application/VsClArch.Template.Abstractions/VsClArch.Template.Application.csproj" />
+    <ProjectReference Include="../VsClArch.Template.Integration/VsClArch.Template.Integration.csproj" />
+    <ProjectReference Include="../VsClArch.Template.Persistance/VsClArch.Template.Persistance.csproj" />
+  </ItemGroup>
+</Project>

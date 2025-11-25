@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="RA.Utilities.Integrations" />
+    <PackageReference Include="Riok.Mapperly" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Application/VsClArch.Template.Abstractions/VsClArch.Template.Application.csproj" />
+  </ItemGroup>
+
+</Project>

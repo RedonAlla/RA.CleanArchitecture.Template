@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" />
+    <PackageReference Include="RA.Utilities.Data.EntityFramework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Application/VsClArch.Template.Abstractions/VsClArch.Template.Application.csproj" />
+  </ItemGroup>
+
+</Project>

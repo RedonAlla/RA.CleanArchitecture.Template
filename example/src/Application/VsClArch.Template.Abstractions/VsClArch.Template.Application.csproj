@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="RA.Utilities.Api.Results" />
+    <PackageReference Include="RA.Utilities.Core" />
+    <PackageReference Include="RA.Utilities.Core.Exceptions" />
+    <PackageReference Include="RA.Utilities.Data.Abstractions" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="RA.Utilities.Feature" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Core/VsClArch.Template.Domain/VsClArch.Template.Domain.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,6 @@
+@VsClArch.Template.Api_HostAddress = http://localhost:5039
+
+GET {{VsClArch.Template.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
