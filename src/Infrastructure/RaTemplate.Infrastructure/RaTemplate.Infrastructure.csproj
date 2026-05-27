@@ -2,7 +2,7 @@
 
   <ItemGroup>
 <!--#if (!UseIntegrations || !UseAnyPersistence) -->
-    <ProjectReference Include="../../Core/AClArchTemplate.Application/AClArchTemplate.Application.csproj" />
+    <ProjectReference Include="../../Core/RaTemplate.Application/RaTemplate.Application.csproj" />
 <!--#endif -->
 <!--#if (UseIntegrations) -->
     <ProjectReference Include="../RaTemplate.Integration/RaTemplate.Integration.csproj" />

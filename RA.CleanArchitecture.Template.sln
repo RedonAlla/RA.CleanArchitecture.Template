@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{9048EB7F-3875-A59E-E36B-5BD4C6F2A282}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{03997797-E7F5-0643-168D-B8EA7178C2FE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{03997797-E7F5-0643-168D-B8EA7178C2FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{8D626EA8-CB54-BC41-363A-217881BEBA6E}"
 EndProject
@@ -31,11 +31,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaTemplate.Persistence", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaTemplate.Integration", "src\Infrastructure\RaTemplate.Integration\RaTemplate.Integration.csproj", "{F4465C2A-0D06-4ED1-AEDD-2E0B9F847D4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaTemplate.Api.Contracts", "src\Web\RaTemplate.Api.Contracts\RaTemplate.Api.Contracts.csproj", "{CCE12E6D-25F6-46B9-8EBF-C010D4CC5CFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaTemplate.Api.Contracts", "src\Presentation\RaTemplate.Api.Contracts\RaTemplate.Api.Contracts.csproj", "{CCE12E6D-25F6-46B9-8EBF-C010D4CC5CFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaTemplate.Api", "src\Web\RaTemplate.Api\RaTemplate.Api.csproj", "{EAA64D7B-7C2A-4E97-A4BA-9E57BE010EBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaTemplate.Api", "src\Presentation\RaTemplate.Api\RaTemplate.Api.csproj", "{EAA64D7B-7C2A-4E97-A4BA-9E57BE010EBF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaTemplate.Infrastructure", "src\Infrastructure\RaTemplate.Infrastructure\RaTemplate.Infrastructure.csproj", "{EE66496A-B684-49B2-8B0F-F94A2F856B54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaTemplate.ArchitectureTests", "tests\RaTemplate.ArchitectureTests\RaTemplate.ArchitectureTests.csproj", "{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -131,6 +133,18 @@ Global
 		{EE66496A-B684-49B2-8B0F-F94A2F856B54}.Release|x64.Build.0 = Release|Any CPU
 		{EE66496A-B684-49B2-8B0F-F94A2F856B54}.Release|x86.ActiveCfg = Release|Any CPU
 		{EE66496A-B684-49B2-8B0F-F94A2F856B54}.Release|x86.Build.0 = Release|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Debug|x64.Build.0 = Debug|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Debug|x86.Build.0 = Debug|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Release|x64.ActiveCfg = Release|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Release|x64.Build.0 = Release|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Release|x86.ActiveCfg = Release|Any CPU
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,5 +160,6 @@ Global
 		{CCE12E6D-25F6-46B9-8EBF-C010D4CC5CFC} = {03997797-E7F5-0643-168D-B8EA7178C2FE}
 		{EAA64D7B-7C2A-4E97-A4BA-9E57BE010EBF} = {03997797-E7F5-0643-168D-B8EA7178C2FE}
 		{EE66496A-B684-49B2-8B0F-F94A2F856B54} = {9048EB7F-3875-A59E-E36B-5BD4C6F2A282}
+		{66431A66-DDA0-46AD-A3D1-C3A4D9E5420E} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

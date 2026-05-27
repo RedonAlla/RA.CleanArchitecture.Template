@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="../RaTemplate.Domain/RaTemplate.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Features/" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="RA.Utilities.Feature" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../RaTemplate.Domain/RaTemplate.Domain.csproj" />
   </ItemGroup>
 
 </Project>
