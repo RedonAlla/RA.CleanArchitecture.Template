@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-<!--#if (!UseIntegrations || !UseAnyPersistence) -->
+<!--#if (!UseIntegrations || !UseAnyDatabase) -->
     <ProjectReference Include="../../Core/RaTemplate.Application/RaTemplate.Application.csproj" />
 <!--#endif -->
 <!--#if (UseIntegrations) -->
     <ProjectReference Include="../RaTemplate.Integration/RaTemplate.Integration.csproj" />
 <!--#endif -->
-<!--#if (UseAnyPersistence) -->
+<!--#if (UseAnyDatabase) -->
     <ProjectReference Include="../RaTemplate.Persistence/RaTemplate.Persistence.csproj" />
 <!--#endif -->
   </ItemGroup>

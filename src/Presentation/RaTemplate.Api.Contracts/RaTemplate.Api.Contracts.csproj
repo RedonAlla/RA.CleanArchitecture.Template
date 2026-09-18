@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Folder Include="Constants/" />
-    <Folder Include="V1/" />
+    <PackageReference Include="RA.Utilities.Api.Response" />
   </ItemGroup>
 
 </Project>

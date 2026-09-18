@@ -11,7 +11,7 @@ internal static class AuthorizationExtensions
             .AddAppUser()
             .AddJwtBearerAuthentication(configuration);
 
-        // Here you can add your Authorization polices.
+        // Here you can add your Authorization policies.
 
         return services;
     }

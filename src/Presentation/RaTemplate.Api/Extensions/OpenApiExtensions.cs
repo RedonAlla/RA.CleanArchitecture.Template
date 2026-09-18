@@ -1,4 +1,3 @@
-using System;
 using RA.Utilities.OpenApi.Extensions;
 using RA.Utilities.OpenApi.Settings;
 

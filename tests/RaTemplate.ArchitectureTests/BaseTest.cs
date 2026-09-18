@@ -1,4 +1,5 @@
 using System.Reflection;
+using RaTemplate.Api.Contracts;
 using RaTemplate.Application;
 using RaTemplate.Infrastructure;
 using RaTemplate.Integration;

@@ -1,28 +1,38 @@
 {
   "$schema": "http://json.schemastore.org/vs-2017.3.host",
+  "order": 0,
   "icon": "icon.png",
   "learnMoreLink": "https://redonalla.github.io/RA.Utilities/vs-template/intro",
   "symbolInfo": [
     {
-      "id": "OpenApiUI",
-      "choices": [
-        {
-          "choice": "swagger",
-          "isEnabled": "false"
-        }
-      ]
-    },
-    {
       "id": "UseAuthorization",
-      "isVisible": "true"
+      "isVisible": true,
+      "name": {
+        "text": "Use Authorization"
+      },
+      "description": {
+        "text": "Chose if you want to use Authorization in your application."
+      }
     },
     {
       "id": "UseScalarUI",
-      "isVisible": "false"
+      "isVisible": false,
+      "name": {
+        "text": "Scalar UI"
+      },
+      "description": {
+        "text": "Select Scalar UI for your API documentation."
+      }
     },
     {
       "id": "SwaggerUI",
-      "isVisible": "false"
+      "isVisible": false,
+      "name": {
+        "text": "Scalar UI"
+      },
+      "description": {
+        "text": "Select Swagger UI for your API documentation."
+      }
     }
   ]
 }

@@ -72,7 +72,7 @@ You can customize the generated project by passing parameters to the `dotnet new
 This command scaffolds a project that uses Dapper for data access with an Oracle database and disables JWT authorization.
 
 ```bash
-dotnet new RA.Template -n MyDapperApi --UsePersistence DapperOracle --UseAuthorization false
+dotnet new RA.Template -n MyDapperApi --Database DapperOracle --UseAuthorization false
 ```
 
 **Example 2: Project with both EF Core and Dapper for SQL Server**
@@ -80,13 +80,13 @@ dotnet new RA.Template -n MyDapperApi --UsePersistence DapperOracle --UseAuthori
 The template supports multiple persistence options. This is useful if you need to use EF for some parts of your application and Dapper for performance-critical queries.
 
 ```bash
-dotnet new RA.Template -n MyHybridApi --UsePersistence EfSqlServer --UsePersistence DapperSqlServer
+dotnet new RA.Template -n MyHybridApi --Database EfSqlServer --Database DapperSqlServer
 ```
 
 **Example 3: A minimal API without Persistence or Integrations**
 
 ```bash
-dotnet new RA.Template -n MyMinimalApi --UsePersistence "" --UseIntegrations false
+dotnet new RA.Template -n MyMinimalApi --Database "" --UseIntegrations false
 ```
 
 ### 5. Running Your New Application
@@ -95,9 +95,9 @@ dotnet new RA.Template -n MyMinimalApi --UsePersistence "" --UseIntegrations fal
     `cd YourProjectName`
 2.  **Restore Dependencies**:
     `dotnet restore`
-3.  **Configure Settings**: Open `src/Web/YourProjectName.Api/appsettings.Development.json` and update the `ConnectionStrings` section if you are using a persistence layer.
+3.  **Configure Settings**: Open `src/Presentation/YourProjectName.Api/appsettings.Development.json` and update the `ConnectionStrings` section if you are using a persistence layer.
 4.  **Run the application**:
-    `dotnet run --project src/Web/YourProjectName.Api/YourProjectName.Api.csproj`
+    `dotnet run --project src/Presentation/YourProjectName.Api/YourProjectName.Api.csproj`
 5.  **Access the API**: The application will be running on the configured port (e.g., `https://localhost:7001`). You can access the OpenAPI documentation at `https://localhost:7001/openapi-ui`.
 
 ### 6. Uninstalling the Template
@@ -127,7 +127,7 @@ RA.CleanArchitecture.Template/
 │   │   │   └── IntegrationServiceRegistration.cs
 │   │   └── RaTemplate.Persistence/
 │   │       └── ... (DbContext, Repositories, Migrations for EF/Dapper)
-│   └── Web/
+│   └── Presentation/
 │       └── RaTemplate.Api/
 │           ├── Extensions/
 │           │   ├── AuthorizationExtensions.cs
@@ -149,7 +149,7 @@ RA.CleanArchitecture.Template/
     * **`RaTemplate.Infrastructure/`**: A central project for wiring up other infrastructure components.
     * **`RaTemplate.Integration/`**: Contains services for communicating with external APIs, like the HTTP client setup you have.
     * **`RaTemplate.Persistence/`**: Implements the data access logic using Entity Framework or Dapper, as chosen by the user.
-  * **`Web/RaTemplate.Api/`**: This is the entry point of your application—the API project. It handles HTTP requests, routing, and calls into the Application layer. It depends on the Application and Infrastructure layers for dependency injection setup.
+  * **`Presentation/RaTemplate.Api/`**: This is the entry point of your application—the API project. It handles HTTP requests, routing, and calls into the Application layer. It depends on the Application and Infrastructure layers for dependency injection setup.
 
 ## 🧠 Summary
 In summary, **RA.CleanArchitecture.Template** template provides a robust and customizable foundation for developing modern, maintainable, and scalable .NET Web APIs.
@@ -162,4 +162,4 @@ In summary, **RA.CleanArchitecture.Template** template provides a robust and cus
 | `UseAuthorization` | JWT Authorization | Includes JWT-based authorization services and middleware. | Boolean | `true` | `true`, `false` |
 | `UseIntegrations` | Use HTTP Client Integration? | Adds infrastructure for building and consuming external HTTP services. | Boolean | `true` | `true`, `false` |
 | `OpenApiUI` | OpenApi documentation UI. | Selects the user interface for the OpenAPI (Swagger) documentation. | Choice | `scalar` | `scalar`, `swagger` |
-| `UsePersistence` | Persistence Layer | Selects the data access technology. Multiple choices can be selected. | Choice | `EfSqlServer` | `EF with SQL Server`, `EF with Oracle`, `Dapper with SQL Server`, `Dapper with Oracle` |
+| `Database` | Persistence Layer | Selects the data access technology. Multiple choices can be selected. | Choice | `EfSqlServer` | `EF with SQL Server`, `EF with Oracle`, `Dapper with SQL Server`, `Dapper with Oracle` |

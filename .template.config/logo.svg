@@ -1,0 +1,24 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Define gradient for second circle -->
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:rgb(214,0,170);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgb(81,43,212);stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Top half of outer circle (yellow) -->
+  <path d="M 100 10 A 90 90 0 0 1 190 100 H 10 A 90 90 0 0 1 100 10 Z" fill="rgb(214,0,170)" stroke="white" stroke-width="2"/>
+  
+  <!-- Horizontal divider line across outer circle -->
+  <line x1="10" y1="100" x2="190" y2="100" stroke="white" stroke-width="2"/>
+
+  <!-- Bottom half of outer circle (purple) -->
+  <path d="M 10 100 H 190 A 90 90 0 0 1 100 190 A 90 90 0 0 1 10 100 Z" fill="rgb(81,43,212)" stroke="white" stroke-width="2"/>
+  
+  <!-- Second circle with gradient -->
+  <circle cx="100" cy="100" r="60" fill="url(#grad2)" stroke="white" stroke-width="2"/>
+  
+  <!-- Inner light gray circle -->
+  <circle cx="100" cy="100" r="30" fill="transparent" stroke="white" stroke-width="2"/>
+</svg>

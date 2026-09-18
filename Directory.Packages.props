@@ -7,9 +7,11 @@
     <PackageVersion Include="RA.Utilities.Integrations" Version="10.0.0-rc.2" />
   </ItemGroup>
   <!--#endif -->
-  <!--#if (UseAnyPersistence) -->
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Data.Entities" Version="10.0.0-rc.2" />
+  </ItemGroup>
+  <!--#if (UseAnyDatabase) -->
+  <ItemGroup>
     <PackageVersion Include="RA.Utilities.Data.Abstractions" Version="10.0.0-rc.2" />
   </ItemGroup>
   <!--#endif -->
@@ -28,6 +30,7 @@
     <!--#endif -->
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Api" Version="10.0.0-rc.2" />
+    <PackageVersion Include="RA.Utilities.Api.Response" Version="10.0.0" />
     <PackageVersion Include="RA.Utilities.OpenApi" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Logging.Core" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Api.Middlewares" Version="10.0.0-rc.2" />

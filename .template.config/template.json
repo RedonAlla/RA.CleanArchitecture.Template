@@ -3,14 +3,15 @@
   "author": "Redon Alla",
   "classifications": ["web", "api"],
   "identity": "RA.CleanArchitecture.Template",
-  "name": "RA. Clean Architecture Template",
+  "groupIdentity": "RA.CleanArchitecture.Template",
+  "name": "Clean Architecture Solution",
   "shortName": "RA.Template",
   "tags": {
     "language": "C#",
     "type": "solution"
   },
   "defaultName": "RaTemplate",
-  "sourceName": "VsClArchTemplate",
+  "sourceName": "RaTemplate",
   "description": "Template for building Web Api with Clean Architecture",
   "preferNameDirectory": true,
   "symbols": {
@@ -53,19 +54,14 @@
           "choice": "scalar",
           "displayName": "Scalar",
           "description": "Use Scalar as UI for API documentation and tests."
-        },
-        {
-          "choice": "swagger",
-          "displayName": "Swagger",
-          "description": "Use Swagger as UI for API documentation and tests. NOT YET SUPPORTED"
         }
       ],
       "defaultValue": "scalar"
     },
-    "UsePersistence": {
+    "Database": {
       "type": "parameter",
-      "displayName": "Persistence Layer",
-      "description": "Select the persistence layer implementation(s).",
+      "displayName": "Database type",
+      "description": "Select the Database types you want to use in your application.",
       "datatype": "choice",
       "allowMultipleValues": true,
       "choices": [
@@ -78,93 +74,56 @@
           "choice": "EfOracle",
           "displayName": "EF with Oracle",
           "description": "Use Entity Framework with Oracle"
-        },
-        {
-          "choice": "DapperSqlServer",
-          "displayName": "Dapper with SQL Server",
-          "description": "Use Dapper with SQL Server"
-        },
-        {
-          "choice": "DapperOracle",
-          "displayName": "Dapper with Oracle",
-          "description": "Use Dapper with Oracle"
         }
       ],
-      "defaultValue": "EfSqlServer"
+      "defaultValue": ""
     },
     "UseScalarUI": {
       "type": "computed",
       "value": "(OpenApiUI == \"scalar\")"
     },
-    "SwaggerUI": {
-      "type": "computed",
-      "value": "(OpenApiUI == \"swagger\")"
-    },
     "UseEfSqlServer": {
       "type": "computed",
-      "value": "UsePersistence.indexOf('EfSqlServer') > -1"
+      "value": "Database.indexOf('EfSqlServer') > -1"
     },
     "UseEfOracle": {
       "type": "computed",
-      "value": "UsePersistence.indexOf('EfOracle') > -1"
+      "value": "Database.indexOf('EfOracle') > -1"
     },
-    "UseDapperSqlServer": {
+    "UseAnyDatabase": {
       "type": "computed",
-      "value": "UsePersistence.indexOf('DapperSqlServer') > -1"
-    },
-    "UseDapperOracle": {
-      "type": "computed",
-      "value": "UsePersistence.indexOf('DapperOracle') > -1"
-    },
-    "UseAnyPersistence": {
-      "type": "computed",
-      "value": "UsePersistence.length > 0"
+      "value": "Database.length > 0"
     }
   },
   "sources": [
     {
+      "exclude": [
+        "**/[Bb]in/**",
+        "**/[Oo]bj/**",
+        ".template.config/**/*",
+        "**/*.filelist",
+        "**/*.user",
+        "example/**",
+        "README.md",
+        "CLAUDE.md"
+      ],
+      "rename": {
+        "README-template.md": "README.md",
+        "CLAUDE-template.md": "CLAUDE.md"
+      },
       "modifiers": [
-        {
-          "condition": "(!UseScalarUI)",
-          "exclude": [
-            "src/Web/RaTemplate.Api/Extensions/OpenApiExtensions.cs"
-          ]
-        },
-        {
-          "condition": "(!UseIntegrations)",
-          "exclude": [
-            "src/Infrastructure/RaTemplate.Integration/**"
-          ]
-        },
-        {
-          "condition": "(!UseAnyPersistence)",
-          "exclude": [
-            "src/Infrastructure/RaTemplate.Persistence/**"
-          ]
-        },
         {
           "condition": "(!UseAuthorization)",
           "exclude": [
-            "src/Web/RaTemplate.Api/Extensions/AuthorizationExtensions.cs"
-          ]
-        },
-        {
-          "exclude": [
-            "**/[Bb]in/**",
-            "**/[Oo]bj/**",
-            ".template.config/**/*",
-            "**/*.filelist",
-            "**/*.user",
-            "**/*.lock.json",
-            "example/**"
+            "src/Presentation/RaTemplate.Api/Extensions/AuthorizationExtensions.cs"
           ]
         }
       ]
     }
   ],
   "primaryOutputs": [
-    { "path": "src/Web/RaTemplate.Api/RaTemplate.Api.csproj" },
-    { "path": "src/Web/RaTemplate.Api/README.md" }
+    { "path": "src/Presentation/RaTemplate.Api/RaTemplate.Api.csproj" },
+    { "path": "src/Presentation/RaTemplate.Api/README.md" }
   ],
   "postActions": [
     {

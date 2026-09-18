@@ -17,10 +17,10 @@ public static class InfrastructureServiceRegistration
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
 #if UseIntegrations
-        services.AddIntegrationServices(configuration)
+        services.AddIntegrationServices(configuration);
 #endif
-#if UseAnyPersistence
-        services.AddPersistence(configuration)
+#if UseAnyDatabase
+        services.AddPersistence(configuration);
 #endif
         return services;
     }
