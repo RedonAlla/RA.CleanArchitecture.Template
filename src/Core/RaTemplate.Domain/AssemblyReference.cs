@@ -9,4 +9,4 @@ namespace RaTemplate.Domain;
     "Maintainability",
     "CA1515:Consider making public types internal",
     Justification = "The type is intentionally public so the composition root can reference the Domain assembly.")]
-public sealed class DomainAssemblyMarker;
+public sealed class AssemblyReference;

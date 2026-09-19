@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Folder Include="Features/" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="RA.Utilities.Feature" />
   </ItemGroup>
 

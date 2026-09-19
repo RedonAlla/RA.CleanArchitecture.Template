@@ -12,7 +12,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NetArchTest.Rules" />
-    <PackageReference Include="Shouldly" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,6 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../src/Core/RaTemplate.Application/RaTemplate.Application.csproj" />
+    <ProjectReference Include="../../src/Core/RaTemplate.Domain/RaTemplate.Domain.csproj" />
+    <ProjectReference Include="../../src/Infrastructure/RaTemplate.Infrastructure/RaTemplate.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/Infrastructure/RaTemplate.Integration/RaTemplate.Integration.csproj" />
+    <ProjectReference Include="../../src/Infrastructure/RaTemplate.Persistence/RaTemplate.Persistence.csproj" />
     <ProjectReference Include="../../src/Presentation/RaTemplate.Api/RaTemplate.Api.csproj" />
     <ProjectReference Include="../../src/Presentation/RaTemplate.Api.Contracts/RaTemplate.Api.Contracts.csproj" />
   </ItemGroup>

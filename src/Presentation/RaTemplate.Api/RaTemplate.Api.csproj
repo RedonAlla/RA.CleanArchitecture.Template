@@ -25,5 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="../../Core/RaTemplate.Application/RaTemplate.Application.csproj" />
     <ProjectReference Include="../../Infrastructure/RaTemplate.Infrastructure/RaTemplate.Infrastructure.csproj" />
+    <ProjectReference Include="../RaTemplate.Api.Contracts/RaTemplate.Api.Contracts.csproj" />
   </ItemGroup>
 </Project>

@@ -9,4 +9,4 @@ namespace RaTemplate.Application;
     "Maintainability",
     "CA1515:Consider making public types internal",
     Justification = "The type is intentionally public so the composition root can reference the Application assembly.")]
-public sealed class ApplicationAssemblyMarker;
+public sealed class AssemblyReference;
