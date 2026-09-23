@@ -136,6 +136,7 @@ public class DependencyTests
         // Assert
         Assert.True(testResult.IsSuccessful);
     }
+
 #if UseAnyDatabase
     /// <summary>
     /// Verifies that the Persistence layer does not depend on forbidden projects in the solution.
