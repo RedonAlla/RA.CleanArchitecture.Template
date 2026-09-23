@@ -8,7 +8,7 @@ namespace RaTemplate.Integration;
 /// <summary>
 /// Provides extension methods for registering integration services in the dependency injection container.
 /// </summary>
-public static class IntegrationServiceRegistration
+public static class DependencyInjection
 {
     /// <summary>
     /// Adds integration services to the specified <see cref="IServiceCollection"/>.

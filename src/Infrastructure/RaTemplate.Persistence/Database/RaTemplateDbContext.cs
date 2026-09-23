@@ -11,6 +11,7 @@ public sealed class RaTemplateDbContext(DbContextOptions<RaTemplateDbContext> op
     /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema(Schemas.Default);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(RaTemplateDbContext).Assembly);
     }
 }

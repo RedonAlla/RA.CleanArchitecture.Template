@@ -6,7 +6,7 @@ namespace RaTemplate.Infrastructure;
 /// <summary>
 /// Provides extension methods for registering infrastructure-layer services in the dependency injection container.
 /// </summary>
-public static class InfrastructureServiceRegistration
+public static class DependencyInjection
 {
     /// <summary>
     /// Adds infrastructure services to the specified <see cref="IServiceCollection"/>.
@@ -16,12 +16,6 @@ public static class InfrastructureServiceRegistration
     /// <returns>The <see cref="IServiceCollection"/> to allow for chaining of service registrations.</returns>
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-#if UseIntegrations
-        services.AddIntegrationServices(configuration);
-#endif
-#if UseAnyDatabase
-        services.AddPersistence(configuration);
-#endif
         return services;
     }
 }

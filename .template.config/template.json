@@ -117,6 +117,13 @@
           "exclude": [
             "src/Presentation/RaTemplate.Api/Extensions/AuthorizationExtensions.cs"
           ]
+        },
+        {
+          "condition": "(!UseAnyDatabase)",
+          "exclude": [
+            "tests/RaTemplate.ArchitectureTests/PersistenceTests.cs",
+            "src/Core/RaTemplate.Domain/Constants/EntitiesConstraints.cs"
+          ]
         }
       ]
     }

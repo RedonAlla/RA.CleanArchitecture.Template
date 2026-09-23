@@ -10,7 +10,7 @@ namespace RaTemplate.Persistence;
 /// <summary>
 /// Provides dependency injection for persistence services.
 /// </summary>
-public static class PersistenceDependencyInjection
+public static class DependencyInjection
 {
     private const string RaTemplateConnectionString = "RaTemplateConnectionString";
 
@@ -24,9 +24,7 @@ public static class PersistenceDependencyInjection
     {
         services
             .AddDatabase(configuration)
-            .AddPersistenceChecks(configuration)
-            .AddReadRepositoryBase()
-            .AddWriteRepositoryBase();
+            .AddHealthChecks(configuration);
 
         return services;
     }
@@ -45,10 +43,10 @@ public static class PersistenceDependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddPersistenceChecks(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
-        services
-            .AddHealthChecks()
+        //TODO ADD health check for Oracle
+        services.AddHealthChecks()
             .AddSqlServer(GetConnectionString(configuration));
 
         return services;

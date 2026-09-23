@@ -2,26 +2,28 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
+
   <!--#if (UseIntegrations) -->
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Integrations" Version="10.0.0-rc.2" />
   </ItemGroup>
   <!--#endif -->
-  <ItemGroup>
-    <PackageVersion Include="RA.Utilities.Data.Entities" Version="10.1.0" />
-  </ItemGroup>
+  
   <!--#if (UseAnyDatabase) -->
   <ItemGroup>
+    <PackageVersion Include="RA.Utilities.Data.Entities" Version="10.1.0" />
     <PackageVersion Include="RA.Utilities.Data.Abstractions" Version="10.0.0-rc.2" />
-  </ItemGroup>
-  <!--#endif -->
-  <!--#if (UseEfSqlServer) -->
-  <ItemGroup>
+    <!--#if (UseEfSqlServer) -->
     <PackageVersion Include="RA.Utilities.Data.EntityFramework" Version="10.0.9-rc" />
     <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0-rc.2.25502.107" />
+    <!--#endif -->
+    <!--#if (UseEfOracle) -->
+    <PackageVersion Include="Oracle.EntityFrameworkCore" Version="10.23.26301" />
+    <!--#endif -->
   </ItemGroup>
   <!--#endif -->
+
   <!--#if (UseAuthorization) -->
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Authorization" Version="10.0.0-rc.2" />
@@ -35,6 +37,7 @@
     <PackageVersion Include="RA.Utilities.Logging.Core" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Api.Middlewares" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Feature" Version="10.0.0-rc.2" />
+    <PackageVersion Include="RA.Utilities.Core.ValueObjects" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup>
     <!--#if (UseScalarUI) -->
@@ -44,6 +47,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
   </ItemGroup>
   <!-- Static code analysis -->
   <ItemGroup>
