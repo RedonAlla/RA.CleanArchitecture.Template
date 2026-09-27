@@ -1,11 +1,15 @@
+#if UseAnyDatabase
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RA.Utilities.Data.EntityFramework.Extensions;
 using RA.Utilities.Data.EntityFramework.Interceptors;
+using RaTemplate.Application.Abstractions.Data;
 using RaTemplate.Persistence.Database;
 
 namespace RaTemplate.Persistence;
+
+//TODO a more generic and reusable for multiple data bases
 
 /// <summary>
 /// Provides dependency injection for persistence services.
@@ -22,8 +26,7 @@ public static class DependencyInjection
     /// <returns>The <see cref="IServiceCollection" /> so that additional services can be chained.</returns>
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        services
-            .AddDatabase(configuration)
+        services.AddDatabase(configuration)
             .AddHealthChecks(configuration);
 
         return services;
@@ -32,24 +35,49 @@ public static class DependencyInjection
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<BaseEntitySaveChangesInterceptor>();
+        services.AddScoped<RaTemplateDbContextInitializer>();
 
-        services.AddDbContext<RaTemplateDbContext>((provider, options) => options
-            .UseSqlServer(GetConnectionString(configuration))
-            .AddInterceptors(provider.GetRequiredService<BaseEntitySaveChangesInterceptor>()
-        ));
+        services.AddDbContext<RaTemplateDbContext>((provider, options) =>
+        {
+#if UseEfOracle
+            options.UseOracle(GetConnectionString(configuration))
+#endif
+#if UseEfSqlServer
+            options.UseSqlServer(GetConnectionString(configuration))
+#endif
+            options.AddInterceptors(provider.GetRequiredService<BaseEntitySaveChangesInterceptor>());
 
-        services.AddScoped<DbContext>(sp => sp.GetRequiredService<RaTemplateDbContext>());
+            IHostEnvironment env = provider.GetRequiredService<IHostEnvironment>();
+
+            if (env.IsDevelopment())
+            {
+                ILogger<RaTemplateDbContext> logger = provider.GetRequiredService<ILogger<RaTemplateDbContext>>();
+                options.LogTo(
+                        msg =>
+                        {
+                            if (logger.IsEnabled(LogLevel.Information))
+                                logger.LogInformation("{Message}", msg);
+                        },
+                        [DbLoggerCategory.Database.Command.Name],
+                        LogLevel.Information)
+                    .EnableSensitiveDataLogging();
+            }
+        });
+
+        services.AddScoped<IRaTemplateDbContext>(sp => sp.GetRequiredService<RaTemplateDbContext>());
 
         return services;
     }
 
-    private static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    private static void AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
-        //TODO ADD health check for Oracle
         services.AddHealthChecks()
+#if UseEfOracle
+            .AddOracle(GetConnectionString(configuration));
+#endif
+#if UseEfSqlServer
             .AddSqlServer(GetConnectionString(configuration));
-
-        return services;
+#endif
     }
 
     private static string GetConnectionString(IConfiguration configuration)
@@ -60,3 +88,4 @@ public static class DependencyInjection
         return connectionString;
     }
 }
+#endif

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   
   <ItemGroup>
   <!--#if (UseEfSqlServer) -->
@@ -7,6 +6,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
   <!--#endif -->
    <!--#if (UseEfOracle) -->
+    <PackageReference Include="AspNetCore.HealthChecks.Oracle" />
     <PackageReference Include="Oracle.EntityFrameworkCore" />
   <!--#endif -->
   </ItemGroup>

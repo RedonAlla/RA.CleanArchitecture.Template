@@ -393,6 +393,9 @@ dotnet_diagnostic.S1118.severity = none
 # S2094: Classes should not be empty
 dotnet_diagnostic.S2094.severity = none
 
+# S2139: Either log this exception and handle it, or rethrow it with some contextual information
+dotnet_diagnostic.S2139.severity = none
+
 # S2325: Methods and properties that don't access instance data should be static
 dotnet_diagnostic.S2325.severity = none
 
