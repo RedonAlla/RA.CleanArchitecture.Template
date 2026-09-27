@@ -15,7 +15,7 @@ public class EntitiesTests
     /// Verifies that all domain entities inherit from <see cref="CoreEntity{TKey}"/>.
     /// </summary>
     [Fact]
-    public void All_Entities_Should_Inherit_From_BaseEntity()
+    public void All_Entities_Should_Inherit_From_CoreEntity()
     {
         TestResult result = Types.InAssembly(Assemblies.Domain)
             .That()
