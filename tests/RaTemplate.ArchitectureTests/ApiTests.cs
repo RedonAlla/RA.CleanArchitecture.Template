@@ -21,7 +21,7 @@ public class ApiTests
     {
         // Act
         TestResult testResult = Types
-            .InAssembly(Assemblies.Domain)
+            .InAssembly(Assemblies.Application)
             .That()
             .ImplementInterface(typeof(IEndpoint))
             .Should()

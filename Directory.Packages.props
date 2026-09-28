@@ -33,7 +33,6 @@
   <!--#endif -->
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Api" Version="10.0.0-rc.2" />
-    <PackageVersion Include="RA.Utilities.Api.Response" Version="10.0.0" />
     <PackageVersion Include="RA.Utilities.OpenApi" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Logging.Core" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Api.Middlewares" Version="10.0.0-rc.2" />
