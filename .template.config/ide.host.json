@@ -25,10 +25,10 @@
       }
     },
     {
-      "id": "SwaggerUI",
+      "id": "UseSwaggerUI",
       "isVisible": false,
       "name": {
-        "text": "Scalar UI"
+        "text": "Swagger UI"
       },
       "description": {
         "text": "Select Swagger UI for your API documentation."

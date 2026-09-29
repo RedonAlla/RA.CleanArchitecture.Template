@@ -54,6 +54,11 @@
           "choice": "scalar",
           "displayName": "Scalar",
           "description": "Use Scalar as UI for API documentation and tests."
+        },
+        {
+          "choice": "swagger",
+          "displayName": "Swagger",
+          "description": "Use Swagger UI as UI for API documentation and tests."
         }
       ],
       "defaultValue": "scalar"
@@ -96,6 +101,10 @@
     "UseScalarUI": {
       "type": "computed",
       "value": "(OpenApiUI == \"scalar\")"
+    },
+    "UseSwaggerUI": {
+      "type": "computed",
+      "value": "(OpenApiUI == \"swagger\")"
     },
     "UseEfSqlServer": {
       "type": "computed",

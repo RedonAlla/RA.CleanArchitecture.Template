@@ -94,5 +94,12 @@ public static class OpenApiExtensions
             };
         });
         //#endif
+        //#if (UseSwaggerUI)
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/openapi/v1.json", "RaTemplate.Api v1");
+            options.DocumentTitle = "RaTemplate Api";
+        });
+        //#endif
     }
 }

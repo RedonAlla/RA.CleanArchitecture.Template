@@ -6,6 +6,12 @@
   </ItemGroup>
   <!--#endif -->
 
+  <!--#if (UseSwaggerUI) -->
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
+  <!--#endif -->
+
   <ItemGroup>
     <PackageReference Include="RA.Utilities.Api" />
     <PackageReference Include="RA.Utilities.OpenApi" />

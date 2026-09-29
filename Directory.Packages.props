@@ -47,11 +47,13 @@
     <PackageVersion Include="RA.Utilities.Api.Middlewares" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Feature" Version="10.0.0-rc.2" />
     <PackageVersion Include="RA.Utilities.Core.ValueObjects" Version="10.0.0" />
-    <PackageVersion Include="RA.Utilities.Data.Entities" Version="10.1.1" />
   </ItemGroup>
   <ItemGroup>
     <!--#if (UseScalarUI) -->
     <PackageVersion Include="Scalar.AspNetCore" Version="2.17.3" />
+    <!--#endif -->
+    <!--#if (UseSwaggerUI) -->
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.3" />
     <!--#endif -->
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.12" />
