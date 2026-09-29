@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -9,14 +10,31 @@ namespace RaTemplate.Persistence.Database;
 public static class RaTemplateDbContextInitializerExtensions
 {
     /// <summary>
-    /// Initializes and seeds the application database.
+    /// Initializes and seeds the application databases.
     /// </summary>
-    /// <param name="scope">The <see cref="IServiceScope" /> used to resolve the database initializer.</param>
+    /// <param name="scope">The <see cref="IServiceScope" /> used to resolve the database initializers.</param>
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
     public static async Task InitializeDatabaseAsync(this IServiceScope scope)
     {
-        RaTemplateDbContextInitializer initializer =
-            scope.ServiceProvider.GetRequiredService<RaTemplateDbContextInitializer>();
+        //#if (UseEfSqlServer)
+        await InitializeContextAsync<RaTemplateSqlServerDbContext>(scope);
+        //#endif
+        //#if (UseEfOracle)
+        await InitializeContextAsync<RaTemplateOracleDbContext>(scope);
+        //#endif
+        //#if (UseEfPostgres)
+        await InitializeContextAsync<RaTemplatePostgresDbContext>(scope);
+        //#endif
+        //#if (UseEfSqlite)
+        await InitializeContextAsync<RaTemplateSqliteDbContext>(scope);
+        //#endif
+    }
+
+    private static async Task InitializeContextAsync<TContext>(IServiceScope scope)
+        where TContext : DbContext
+    {
+        RaTemplateDbContextInitializer<TContext> initializer =
+            scope.ServiceProvider.GetRequiredService<RaTemplateDbContextInitializer<TContext>>();
 
         await initializer.InitializeAsync();
         await initializer.SeedAsync();
@@ -24,11 +42,13 @@ public static class RaTemplateDbContextInitializerExtensions
 }
 
 /// <summary>
-/// Creates and seeds the application database.
+/// Creates and seeds a database for the specified context.
 /// </summary>
-public sealed class RaTemplateDbContextInitializer(
-    ILogger<RaTemplateDbContextInitializer> logger,
-    RaTemplateDbContext context)
+/// <typeparam name="TContext">The type of the <see cref="DbContext" /> to initialize.</typeparam>
+public sealed class RaTemplateDbContextInitializer<TContext>(
+    ILogger<RaTemplateDbContextInitializer<TContext>> logger,
+    TContext context)
+    where TContext : DbContext
 {
     /// <summary>
     /// Creates the database if it does not exist.

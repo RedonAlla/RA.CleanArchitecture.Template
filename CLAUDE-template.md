@@ -4,9 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-This is a .NET solution template (`RA.CleanArchitecture.Template`) that scaffolds Web API projects following Clean Architecture principles. It is itself a real, buildable .NET solution — the source code is the template content. Projects are named `RaTemplate.*` in source; the `sourceName` in `template.json` (`VsClArchTemplate`) is replaced when a user scaffolds a new project.
+A .NET 10 (`net10.0`) Web API solution following Clean Architecture principles. Dependencies only point inward: **Domain → Application → Infrastructure → Presentation**.
 
-Target framework: **.NET 10.0** (`net10.0`).
+This solution was generated from the `RA.CleanArchitecture.Template` template. Depending on the options chosen at generation time, some projects may be absent:
+
+- `RaTemplate.Persistence` (and `RaTemplate.Application/Abstractions/Data`) when no database provider was selected
+- `RaTemplate.Integration` when HTTP integrations were disabled
+- JWT authorization wiring (and `AuthorizationExtensions.cs`) when authorization was disabled
 
 ## Build and test commands
 
@@ -18,36 +22,30 @@ dotnet restore
 dotnet build
 
 # Run the API
-dotnet run --project src/Web/RaTemplate.Api/RaTemplate.Api.csproj
+dotnet run --project src/Presentation/RaTemplate.Api/RaTemplate.Api.csproj
 
 # Run all tests
 dotnet test
 
 # Run a single test
 dotnet test --filter "FullyQualifiedName=Namespace.ClassName.TestMethodName"
-
-# Install the template locally (from repo root)
-dotnet new install .
-
-# Uninstall the template
-dotnet new uninstall RA.CleanArchitecture.Template
 ```
 
-The API starts on `https://localhost:7001` by default. OpenAPI docs are at `/openapi-ui`.
+The API listens on `http://localhost:5039` with the default profile (`https://localhost:7202` with `--launch-profile https`). Scalar API documentation is at `/openapi-ui` (mapped outside the Production environment); health checks are at `/health` when a database provider is configured.
 
 ## Solution structure
 
 ```
 src/
   Core/
-    RaTemplate.Domain/          # Entities, value objects — no project dependencies
-    RaTemplate.Application/     # CQRS handlers, DTOs, application services — depends on Domain
+    RaTemplate.Domain/          # Entities, domain constants — no project dependencies
+    RaTemplate.Application/     # Feature requests, handlers, validators, DTOs — depends on Domain
   Infrastructure/
-    RaTemplate.Infrastructure/  # Wires up other infra projects — depends on Application, Persistence, Integration
-    RaTemplate.Persistence/     # EF Core DbContext, repositories — depends on Application
+    RaTemplate.Infrastructure/  # Wires up other infra projects — depends on Application (+ Persistence, Integration)
+    RaTemplate.Persistence/     # EF Core DbContext, entity configurations, initializer — depends on Application
     RaTemplate.Integration/     # HTTP client integrations — depends on Application
   Presentation/
-    RaTemplate.Api/             # ASP.NET Core host — depends on Application and Infrastructure
+    RaTemplate.Api/             # ASP.NET Core host — depends on Application, Infrastructure, Api.Contracts
     RaTemplate.Api.Contracts/   # Shared API contracts — no project dependencies
 tests/
   RaTemplate.ArchitectureTests/ # NetArchTest-based architecture enforcement — depends on all src projects
@@ -55,47 +53,33 @@ tests/
 
 ## Architecture patterns
 
-**Clean Architecture layers (inner to outer):** Domain → Application → Infrastructure → Web. Dependencies only point inward (e.g., Infrastructure depends on Application, not vice versa).
+**Composition root:** `RaTemplate.Api.StartupExtensions` registers everything (`AddServices`) and configures the pipeline (`UsePipelines`). `Program.cs` runs database initialization on startup in the Development environment.
 
-**Dependency injection wiring pattern:** Each layer exposes a public `*ServiceRegistration` or `*DependencyInjection` class with extension methods on `IServiceCollection`. The API's `StartupExtensions.AddServices` orchestrates registration by calling each layer in order:
+**Service registration entry points:** Each layer exposes extension methods on `IServiceCollection`:
 
-```
-AddApplicationServices() → AddInfrastructureServices(configuration)
-```
+- `RaTemplate.Application.DependencyInjection.AddApplicationServices()` — FluentValidation validators + Mediator
+- `RaTemplate.Infrastructure.DependencyInjection.AddInfrastructureServices(configuration)` — calls the Persistence and Integration registrations
+- `RaTemplate.Persistence.DependencyInjection.AddPersistence(configuration)` — per-provider DbContexts, save-changes interceptor, health checks; reads the connection strings `ConnectionStrings:RaTemplate{SqlServer|Oracle|Postgres|Sqlite}ConnectionString`
+- `RaTemplate.Integration.DependencyInjection.AddIntegrationServices(configuration)` — HTTP client with a request/response logging handler
 
-Within `AddInfrastructureServices`, conditional compilation symbols (`#if UseIntegrations`, `#if UseAnyDatabase`) gate optional infrastructure projects.
+**Feature/Mediator pattern:** The application layer uses `RA.Utilities.Feature` for CQRS via `services.AddMediator()`. Feature endpoints are discovered and mapped with `services.AddEndpoints(Assembly.GetExecutingAssembly())` in the API's `StartupExtensions`. Validators are FluentValidation `AbstractValidator<T>` implementations and are registered from the Application assembly.
 
-**Service registration entry points:**
-- `RaTemplate.Application.ApplicationServiceRegistration.AddApplicationServices()` — registers Mediator
-- `RaTemplate.Infrastructure.InfrastructureServiceRegistration.AddInfrastructureServices()` — gates and calls Integration + Persistence
-- `RaTemplate.Persistence.PersistenceDependencyInjection.AddPersistence()` — DbContext, health checks, repositories
-- `RaTemplate.Integration.IntegrationServiceRegistration.AddIntegrationServices()` — HTTP client with logging handler
+**Data access:** The Application layer depends on per-provider abstractions such as `IRaTemplateSqlServerDbContext` (`RaTemplate.Application.Abstractions.Data`, one interface per selected database provider); the EF Core implementations live in `RaTemplate.Persistence`. Entities derive from `CoreEntity<TKey>` and saves are audited through `BaseEntitySaveChangesInterceptor`.
 
-**Feature/Mediator pattern:** The application layer uses `RA.Utilities.Feature` for CQRS via `services.AddMediator()`. Features are discovered by calling `services.AddEndpoints(Assembly.GetExecutingAssembly())` which maps feature handlers to minimal API endpoints.
+**Test-enforced conventions** (in `RaTemplate.ArchitectureTests` — keep these green when adding code):
 
-**Conditional compilation symbols** (set by `template.json` when scaffolding, or defined manually when building the template source):
-- `UseAuthorization` — gates JWT auth services
-- `UseIntegrations` — gates `RaTemplate.Integration` project
-- `UseAnyDatabase` — gates `RaTemplate.Persistence` project
-- `UseScalarUI` — gates Scalar API docs (vs Swagger)
-
-These appear as `#if UseAuthorization` preprocessor directives in source. When building the template source directly (not via `dotnet new`), these symbols are **not defined** by default — conditional code is excluded unless you define the symbols.
+- Feature requests end with `Input` and are sealed; their output types end with `Output`
+- Handlers end with `Handler`, pipeline decorators with `Decorator`, validators with `Validator` — and all are sealed
+- Domain entities live in `RaTemplate.Domain.Entities`, inherit `CoreEntity<>`, and are sealed
+- EF entity configurations live in `RaTemplate.Persistence.Configuration`, are internal and sealed, and follow the `<Entity>Config` naming convention
+- Layer boundaries are enforced with NetArchTest dependency rules
 
 ## Central package management
 
-The repo uses `ManagePackageVersionsCentrally` in `Directory.Packages.props`. All `PackageReference` elements in `*.csproj` files omit the `Version` attribute — versions are defined centrally in `Directory.Packages.props`. Add new package versions there, not in individual project files.
-
-Key RA.Utilities packages (all `10.0.0-rc.2`):
-- `RA.Utilities.Feature` — Mediator/CQRS
-- `RA.Utilities.Api` / `RA.Utilities.Api.Middlewares` — exception handling, HTTP logging, default headers
-- `RA.Utilities.OpenApi` — OpenAPI document transformers
-- `RA.Utilities.Authentication.JwtBearer` / `RA.Utilities.Authorization` — JWT auth
-- `RA.Utilities.Data.EntityFramework` / `RA.Utilities.Data.Entities` / `RA.Utilities.Data.Abstractions` — persistence base classes
-- `RA.Utilities.Logging.Core` — structured logging
-- `RA.Utilities.Integrations` — HTTP client integration helpers
+The solution uses `ManagePackageVersionsCentrally` in `Directory.Packages.props`. All `PackageReference` elements in `*.csproj` files omit the `Version` attribute — versions are defined centrally. Add new package versions there, not in individual project files.
 
 ## Code quality defaults
 
-- `TreatWarningsAsErrors` and `CodeAnalysisTreatWarningsAsErrors` are enabled
-- Static analysis: `SonarAnalyzer.CSharp` (with many rules relaxed in `.editorconfig`)
-- Code style: file-scoped namespaces, explicit types (no `var` except when type is apparent), expression-bodied members for operators/properties/accessors
+- `TreatWarningsAsErrors`, `CodeAnalysisTreatWarningsAsErrors`, and `EnforceCodeStyleInBuild` are enabled
+- Static analysis: `SonarAnalyzer.CSharp` with many rules relaxed in `.editorconfig`
+- Code style: file-scoped namespaces, explicit types (no `var` except when the type is apparent), braces required, expression-bodied members for operators/properties/accessors

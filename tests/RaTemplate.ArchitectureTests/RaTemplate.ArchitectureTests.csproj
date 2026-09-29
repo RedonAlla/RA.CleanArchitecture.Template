@@ -23,8 +23,12 @@
     <ProjectReference Include="../../src/Core/RaTemplate.Application/RaTemplate.Application.csproj" />
     <ProjectReference Include="../../src/Core/RaTemplate.Domain/RaTemplate.Domain.csproj" />
     <ProjectReference Include="../../src/Infrastructure/RaTemplate.Infrastructure/RaTemplate.Infrastructure.csproj" />
+    <!--#if (UseIntegrations) -->
     <ProjectReference Include="../../src/Infrastructure/RaTemplate.Integration/RaTemplate.Integration.csproj" />
+    <!--#endif -->
+    <!--#if (UseAnyDatabase) -->
     <ProjectReference Include="../../src/Infrastructure/RaTemplate.Persistence/RaTemplate.Persistence.csproj" />
+    <!--#endif -->
     <ProjectReference Include="../../src/Presentation/RaTemplate.Api/RaTemplate.Api.csproj" />
     <ProjectReference Include="../../src/Presentation/RaTemplate.Api.Contracts/RaTemplate.Api.Contracts.csproj" />
   </ItemGroup>

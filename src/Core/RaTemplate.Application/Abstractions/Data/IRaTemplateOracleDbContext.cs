@@ -1,9 +1,9 @@
 namespace RaTemplate.Application.Abstractions.Data;
 
 /// <summary>
-/// Represents the Entity Framework database context for the RaTemplate system.
+/// Represents the Entity Framework database context for Oracle.
 /// </summary>
-public interface IRaTemplateDbContext
+public interface IRaTemplateOracleDbContext
 {
     /// <summary>
     ///     Asynchronously saves all changes made in this context to the database.
@@ -12,8 +12,8 @@ public interface IRaTemplateDbContext
     ///     A <see cref="CancellationToken"/> to observe while waiting for the task to complete.
     /// </param>
     /// <returns>
-    ///     A <see cref="ValueTask{TResult}"/> representing the asynchronous save operation.
+    ///     A <see cref="Task{TResult}"/> representing the asynchronous save operation.
     ///     The task result contains the number of state entries written to the database.
     /// </returns>
-    ValueTask<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

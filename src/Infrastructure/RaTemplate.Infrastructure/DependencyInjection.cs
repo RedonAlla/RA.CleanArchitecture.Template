@@ -1,5 +1,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+//#if (UseIntegrations)
+using RaTemplate.Integration;
+//#endif
+//#if (UseAnyDatabase)
+using RaTemplate.Persistence;
+//#endif
 
 namespace RaTemplate.Infrastructure;
 
@@ -16,6 +22,13 @@ public static class DependencyInjection
     /// <returns>The <see cref="IServiceCollection"/> to allow for chaining of service registrations.</returns>
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        //#if (UseAnyDatabase)
+        services.AddPersistence(configuration);
+        //#endif
+        //#if (UseIntegrations)
+        services.AddIntegrationServices(configuration);
+        //#endif
+
         return services;
     }
 }

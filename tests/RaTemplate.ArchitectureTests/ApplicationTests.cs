@@ -7,7 +7,7 @@ using Xunit;
 namespace RaTemplate.ArchitectureTests;
 
 /// <summary>
-/// Contains architecture tests for domain entities.
+/// Contains architecture tests for the application layer.
 /// </summary>
 public class ApplicationTests
 {
@@ -21,7 +21,7 @@ public class ApplicationTests
     /// Verifies that all feature inputs have the 'Input' suffix.
     /// </summary>
     [Fact]
-    public void Features_Request_Should_ShouldHave_InputSuffix()
+    public void FeatureInputs_Should_Have_Input_Suffix()
     {
         // Act
         TestResult result = Types
@@ -113,7 +113,7 @@ public class ApplicationTests
     /// All Features Decorator should have 'Decorator' suffix.
     /// </summary>
     [Fact]
-    public void FeatureDecorator_Should_Decorator_Suffix()
+    public void FeatureDecorators_Should_Have_Decorator_Suffix()
     {
         TestResult result = Types.InAssembly(Assemblies.Application)
             .That()
@@ -146,7 +146,7 @@ public class ApplicationTests
     }
 
     /// <summary>
-    /// All Features inputs should not be sealed
+    /// Verifies that all feature inputs are sealed.
     /// </summary>
     [Fact]
     public void FeatureInputs_Should_BeSealed()
@@ -165,7 +165,7 @@ public class ApplicationTests
     }
 
     /// <summary>
-    /// All Features Handlers should not be sealed
+    /// Verifies that all feature handlers are sealed.
     /// </summary>
     [Fact]
     public void FeatureHandlers_Should_BeSealed()
@@ -186,7 +186,7 @@ public class ApplicationTests
     }
 
     /// <summary>
-    /// All Features validators should not be sealed
+    /// Verifies that all feature validators are sealed.
     /// </summary>
     [Fact]
     public void FeatureValidators_Should_BeSealed()
@@ -203,10 +203,10 @@ public class ApplicationTests
     }
 
     /// <summary>
-    /// All Features Decorator should have 'Decorator' suffix.
+    /// Verifies that all feature decorators are sealed.
     /// </summary>
     [Fact]
-    public void FeatureDecorator_Should_Should_BeSealed()
+    public void FeatureDecorators_Should_BeSealed()
     {
         TestResult result = Types.InAssembly(Assemblies.Application)
             .That()

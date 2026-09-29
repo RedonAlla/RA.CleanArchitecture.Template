@@ -21,20 +21,21 @@ public class DependencyTests
             Namespaces.Domain,
             Namespaces.Application,
             Namespaces.Infrastructure,
-            Namespaces.ApiContracts,
-#if UseIntegrations
+            // Namespaces.Api is intentionally not listed: NetArchTest matches dependencies
+            // by namespace prefix, so it would also match this assembly's own RaTemplate.Api.Contracts namespaces.
+            //#if (UseIntegrations)
             Namespaces.Integration,
-#endif
-#if UseAnyDatabase
+            //#endif
+            //#if (UseAnyDatabase)
             Namespaces.Persistence,
-#endif
+            //#endif
         ];
 
         // Act
         TestResult testResult = Types
             .InAssembly(Assemblies.ApiContracts)
             .ShouldNot()
-            .HaveDependencyOnAll(otherProjects)
+            .HaveDependencyOnAny(otherProjects)
             .GetResult();
 
         // Assert
@@ -55,19 +56,19 @@ public class DependencyTests
             Namespaces.Infrastructure,
             Namespaces.Api,
             Namespaces.ApiContracts,
-#if UseIntegrations
+            //#if (UseIntegrations)
             Namespaces.Integration,
-#endif
-#if UseAnyDatabase
+            //#endif
+            //#if (UseAnyDatabase)
             Namespaces.Persistence,
-#endif
+            //#endif
         ];
 
         // Act
         TestResult testResult = Types
             .InAssembly(Assemblies.Domain)
             .ShouldNot()
-            .HaveDependencyOnAll(otherProjects)
+            .HaveDependencyOnAny(otherProjects)
             .GetResult();
 
         // Assert
@@ -87,19 +88,19 @@ public class DependencyTests
             Namespaces.Api,
             Namespaces.ApiContracts,
             Namespaces.Infrastructure,
-#if UseIntegrations
+            //#if (UseIntegrations)
             Namespaces.Integration,
-#endif
-#if UseAnyDatabase
+            //#endif
+            //#if (UseAnyDatabase)
             Namespaces.Persistence,
-#endif
+            //#endif
         ];
 
         // Act
         TestResult testResult = Types
             .InAssembly(Assemblies.Application)
             .ShouldNot()
-            .HaveDependencyOnAll(otherProjects)
+            .HaveDependencyOnAny(otherProjects)
             .GetResult();
 
         // Assert
@@ -118,31 +119,25 @@ public class DependencyTests
         [
             Namespaces.Api,
             Namespaces.ApiContracts,
-#if UseIntegrations
-            Namespaces.Integration,
-#endif
-#if UseAnyDatabase
-            Namespaces.Persistence,
-#endif
         ];
 
         // Act
         TestResult testResult = Types
             .InAssembly(Assemblies.Infrastructure)
             .ShouldNot()
-            .HaveDependencyOnAll(otherProjects)
+            .HaveDependencyOnAny(otherProjects)
             .GetResult();
 
         // Assert
         Assert.True(testResult.IsSuccessful);
     }
 
-#if UseAnyDatabase
+    //#if (UseAnyDatabase)
     /// <summary>
     /// Verifies that the Persistence layer does not depend on forbidden projects in the solution.
     /// </summary>
     [Fact]
-    public void Presentation_Should_Not_HaveDependencyOnOtherProjects()
+    public void Persistence_Should_Not_HaveDependencyOnOtherProjects()
     {
         // Arrange
 
@@ -151,23 +146,24 @@ public class DependencyTests
             Namespaces.Api,
             Namespaces.ApiContracts,
             Namespaces.Infrastructure,
-#if UseIntegrations
+            //#if (UseIntegrations)
             Namespaces.Integration,
-#endif
+            //#endif
         ];
 
         // Act
         TestResult testResult = Types
             .InAssembly(Assemblies.Persistence)
             .ShouldNot()
-            .HaveDependencyOnAll(otherProjects)
+            .HaveDependencyOnAny(otherProjects)
             .GetResult();
 
         // Assert
         Assert.True(testResult.IsSuccessful);
     }
-#endif
-#if UseIntegrations
+
+    //#endif
+    //#if (UseIntegrations)
     /// <summary>
     /// Verifies that the Integration layer does not depend on forbidden projects in the solution.
     /// </summary>
@@ -181,21 +177,20 @@ public class DependencyTests
             Namespaces.Api,
             Namespaces.ApiContracts,
             Namespaces.Infrastructure,
-#if UseAnyDatabase
+            //#if (UseAnyDatabase)
             Namespaces.Persistence,
-#endif
+            //#endif
         ];
 
         // Act
         TestResult testResult = Types
             .InAssembly(Assemblies.Integration)
             .ShouldNot()
-            .HaveDependencyOnAll(otherProjects)
+            .HaveDependencyOnAny(otherProjects)
             .GetResult();
 
         // Assert
         Assert.True(testResult.IsSuccessful);
     }
-#endif
+    //#endif
 }
-

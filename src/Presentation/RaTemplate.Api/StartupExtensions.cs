@@ -1,10 +1,15 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+//#if (UseAnyDatabase)
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+//#endif
 using Microsoft.AspNetCore.Http.Json;
 using RA.Utilities.Api.ExceptionHandlers;
 using RA.Utilities.Api.Extensions;
+//#if (UseAuthorization)
+using RA.Utilities.Authentication.JwtBearer.Extensions;
+//#endif
 using RaTemplate.Api.Extensions;
 using RaTemplate.Application;
 using RaTemplate.Infrastructure;
@@ -21,9 +26,11 @@ internal static class StartupExtensions
             .AddExceptionHandler<GlobalExceptionHandler>()
             .AddProblemDetails()
             .AddEndpoints(Assembly.GetExecutingAssembly());
-#if UseAuthorization
+
+        //#if (UseAuthorization)
         services.AddAuthorization(configuration);
-#endif
+
+        //#endif
         services
             .AddApplicationServices()
             .AddInfrastructureServices(configuration);
@@ -45,24 +52,21 @@ internal static class StartupExtensions
             app.UseOpenApi();
         }
 
+        //#if (UseAnyDatabase)
         app.MapHealthChecks("health", new HealthCheckOptions
         {
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
 
-        // if (app.Environment.IsDevelopment())
-        // {
-        //     using IServiceScope scope = app.Services.CreateScope();
-        //     using Task _ = scope.InitializeDatabaseAsync();
-        // }
-
+        //#endif
         app.UseMiddlewares()
             .UseHttpsRedirection()
             .UseExceptionHandler();
-#if UseAuthorization
-        app.UseAuth(configuration);
-#endif
 
+        //#if (UseAuthorization)
+        app.UseAuth();
+
+        //#endif
         app.MapEndpoints();
 
         return app;

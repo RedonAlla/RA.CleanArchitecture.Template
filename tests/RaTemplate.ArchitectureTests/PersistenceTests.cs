@@ -1,4 +1,4 @@
-#if UseAnyDatabase
+//#if (UseAnyDatabase)
 using Microsoft.EntityFrameworkCore;
 using NetArchTest.Rules;
 using Xunit;
@@ -82,8 +82,7 @@ public class PersistenceTests
     {
         // Act
         IEnumerable<Type> nonConformingConfigurations = Types
-            //.InAssembly(Assemblies.Persistence)
-            .InAssembly(Assemblies.Api)
+            .InAssembly(Assemblies.Persistence)
             .That()
             .ImplementInterface(typeof(IEntityTypeConfiguration<>))
             .GetTypes()
@@ -107,4 +106,4 @@ public class PersistenceTests
         return entityType.Name;
     }
 }
-#endif
+//#endif

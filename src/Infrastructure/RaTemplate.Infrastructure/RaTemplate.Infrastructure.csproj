@@ -6,6 +6,12 @@
 
   <ItemGroup>
     <ProjectReference Include="../../Core/RaTemplate.Application/RaTemplate.Application.csproj" />
+    <!--#if (UseAnyDatabase) -->
+    <ProjectReference Include="../RaTemplate.Persistence/RaTemplate.Persistence.csproj" />
+    <!--#endif -->
+    <!--#if (UseIntegrations) -->
+    <ProjectReference Include="../RaTemplate.Integration/RaTemplate.Integration.csproj" />
+    <!--#endif -->
   </ItemGroup>
 
 </Project>

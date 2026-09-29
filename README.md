@@ -8,26 +8,23 @@ This approach emphasizes a separation of concerns, placing business logic at the
 The template is highly configurable, allowing developers to tailor the generated project to their specific needs.
 
 ## 🔑 Key Features
-  * **.NET Framework**: It is set up to use `.NET 10`.
+  * **.NET 10**: It is set up to use `.NET 10`.
   * **Authorization**: You can include or exclude JWT (JSON Web Token) based authorization.
-  * **HTTP Client Integrations**: There is an option to add a pre-configured infrastructure for making HTTP calls to other services. The `IntegrationServiceRegistration.cs` file shows that this includes logging for requests and responses.
+  * **HTTP Client Integrations**: There is an option to add a pre-configured infrastructure for making HTTP calls to other services. The `DependencyInjection.cs` file shows that this includes logging for requests and responses.
   * **⁠Built-in patterns**: Implements common design patterns like CQRS, Dependency Injection, and Mediator.
-  * **OpenAPI Documentation**: You can choose the UI for your API documentation:
-    * **Scalar**: A modern, interactive API documentation tool.
-    * **Swagger**: A more traditional and widely-used option.
-  * **Persistence Layer**: The template offers a flexible data access layer with multiple choices that can be combined:
-    * **ORM**: Entity Framework Core or Dapper.
-    * **Database**: SQL Server or Oracle.
+  * **OpenAPI Documentation**: Scalar, a modern and interactive API documentation UI, is preconfigured and served at `/openapi-ui`.
+  * **Persistence Layer**: The template offers a flexible data access layer built on Entity Framework Core, with a choice of **SQL Server**, **Oracle**, **PostgreSQL**, or **SQLite** — multiple providers can be selected at once (one `DbContext` per provider) — or no database at all.
   * **Modular structure**: Promotes modular development with clear boundaries between core logic and external dependencies.
-  * **⁠Ready-to-use setup**: Includes preconfigured logging, validation, exception handling, and API documentation (Swagger).
+  * **⁠Ready-to-use setup**: Includes preconfigured logging, validation, exception handling, and API documentation (Scalar).
   * **Extensibility**: Designed to be easily extended for real-world projects, whether you're building REST APIs, microservices, or enterprise apps.
+  * **Architecture tests**: A NetArchTest-based test project enforces layer boundaries, entity conventions, and feature naming rules from day one.
 
 ## 🚀 Ideal For
   * ⁠Developers looking for a clean, opinionated.NET template
   * ⁠Teams adopting Clean Architecture for long-term scalability
   * ⁠Projects that require separation of concerns and testability from day one
 
-The project structure is modular. For instance, if you disable `UseIntegrations`, the entire `RaTemplate.Integration` project is excluded. Similarly, the persistence and authorization components are only included if you select them, keeping the final solution clean and free of unused code.
+The project structure is modular: if you disable `UseIntegrations`, the entire `RaTemplate.Integration` project is excluded; if you choose `None` as the database, the `RaTemplate.Persistence` project is excluded; and if you disable `UseAuthorization`, the JWT wiring is left out. The generated solution stays clean and free of unused code.
 
 ## 🚀 Getting Started: A User Guide
 
@@ -67,26 +64,26 @@ This will create a new solution in a folder named `YourProjectName` with the def
 
 You can customize the generated project by passing parameters to the `dotnet new` command.
 
-**Example 1: Project with Dapper, Oracle, and no Authorization**
+**Example 1: Project with EF Core on Oracle and no Authorization**
 
-This command scaffolds a project that uses Dapper for data access with an Oracle database and disables JWT authorization.
+This command scaffolds a project that uses Entity Framework Core with an Oracle database and disables JWT authorization.
 
 ```bash
-dotnet new RA.Template -n MyDapperApi --Database DapperOracle --UseAuthorization false
+dotnet new RA.Template -n MyOracleApi --database EfOracle --UseAuthorization false
 ```
 
-**Example 2: Project with both EF Core and Dapper for SQL Server**
-
-The template supports multiple persistence options. This is useful if you need to use EF for some parts of your application and Dapper for performance-critical queries.
+**Example 2: A minimal API without Persistence or Integrations**
 
 ```bash
-dotnet new RA.Template -n MyHybridApi --Database EfSqlServer --Database DapperSqlServer
+dotnet new RA.Template -n MyMinimalApi --database None --UseIntegrations false
 ```
 
-**Example 3: A minimal API without Persistence or Integrations**
+**Example 3: Project with multiple database providers**
+
+The `Database` parameter is multi-select: repeat the `--database` flag to get one `DbContext`, connection string, health check, and DI registration per provider. Select `None` alone when you do not want persistence.
 
 ```bash
-dotnet new RA.Template -n MyMinimalApi --Database "" --UseIntegrations false
+dotnet new RA.Template -n MyMultiDbApi --database EfOracle --database EfPostgres
 ```
 
 ### 5. Running Your New Application
@@ -95,10 +92,10 @@ dotnet new RA.Template -n MyMinimalApi --Database "" --UseIntegrations false
     `cd YourProjectName`
 2.  **Restore Dependencies**:
     `dotnet restore`
-3.  **Configure Settings**: Open `src/Presentation/YourProjectName.Api/appsettings.Development.json` and update the `ConnectionStrings` section if you are using a persistence layer.
+3.  **Configure Settings**: If your project uses a persistence layer, open `src/Presentation/YourProjectName.Api/appsettings.json` and set the connection string for each selected provider, e.g. `ConnectionStrings:YourProjectNameSqlServerConnectionString` (the keys are renamed along with the project).
 4.  **Run the application**:
     `dotnet run --project src/Presentation/YourProjectName.Api/YourProjectName.Api.csproj`
-5.  **Access the API**: The application will be running on the configured port (e.g., `https://localhost:7001`). You can access the OpenAPI documentation at `https://localhost:7001/openapi-ui`.
+5.  **Access the API**: The default profile listens on `http://localhost:5039` (use `--launch-profile https` for `https://localhost:7202`). OpenAPI documentation is served at `http://localhost:5039/openapi-ui`, and health checks (when a database is configured) at `http://localhost:5039/health`.
 
 ### 6. Uninstalling the Template
 
@@ -109,47 +106,64 @@ dotnet new uninstall RA.CleanArchitecture.Template
 
 ## 🌳 RA.CleanArchitecture.Template Source Tree
 
+The repository is both the template source and a buildable solution. A generated project has the same structure, with `RaTemplate` replaced by your project name and the optional projects omitted according to the selected parameters.
+
 ```
 RA.CleanArchitecture.Template/
 ├── .template.config/
-│   └── template.json
+│   ├── template.json
+│   ├── dotnetcli.host.json
+│   └── ide.host.json
 ├── src/
 │   ├── Core/
 │   │   ├── RaTemplate.Domain/
-│   │   │   └── ... (Entities, Enums, Domain Events, etc.)
+│   │   │   ├── Constants/
+│   │   │   └── AssemblyReference.cs
 │   │   └── RaTemplate.Application/
-│   │       ├── ... (Application services, CQRS handlers, etc.)
-│   │       └── ApplicationServiceRegistration.cs
+│   │       ├── Abstractions/Data/
+│   │       ├── AssemblyReference.cs
+│   │       └── DependencyInjection.cs
 │   ├── Infrastructure/
 │   │   ├── RaTemplate.Infrastructure/
-│   │   │   └── InfrastructureServiceRegistration.cs
+│   │   │   ├── AssemblyReference.cs
+│   │   │   └── DependencyInjection.cs
 │   │   ├── RaTemplate.Integration/
-│   │   │   └── IntegrationServiceRegistration.cs
+│   │   │   ├── AssemblyReference.cs
+│   │   │   └── DependencyInjection.cs
 │   │   └── RaTemplate.Persistence/
-│   │       └── ... (DbContext, Repositories, Migrations for EF/Dapper)
+│   │       ├── Database/
+│   │       ├── AssemblyReference.cs
+│   │       └── DependencyInjection.cs
 │   └── Presentation/
-│       └── RaTemplate.Api/
-│           ├── Extensions/
-│           │   ├── AuthorizationExtensions.cs
-│           │   └── OpenApiExtensions.cs
-│           ├── Endpoints/
-│           │   └── ... (API endpoints)
-│           ├── Program.cs
-│           ├── StartupExtensions.cs
-│           └── README.md
-├── RA.CleanArchitecture.Template.sln
-└── README.md
+│       ├── RaTemplate.Api/
+│       │   ├── Extensions/
+│       │   ├── Properties/launchSettings.json
+│       │   ├── Program.cs
+│       │   ├── StartupExtensions.cs
+│       │   └── appsettings.json
+│       └── RaTemplate.Api.Contracts/
+│           └── AssemblyReference.cs
+├── tests/
+│   └── RaTemplate.ArchitectureTests/
+├── Directory.Build.props
+├── Directory.Packages.props
+├── RaTemplate.sln
+├── README-template.md
+└── CLAUDE-template.md
 ```
 ### Explanation of the Structure:
-  * **`template.config/`**: This directory holds the `template.json` file, which is the heart of your .NET template, defining its parameters, conditions, and file mappings.
+  * **`.template.config/`**: Holds the template metadata (`template.json`, `dotnetcli.host.json`, and `ide.host.json`), which define the parameters, conditional inclusions, and renames used by `dotnet new`.
   * **`src/`**: This is the main source code directory.
-  * **`Core/RaTemplate.Domain/`**: Contains business entities, value objects, and domain logic, with no dependencies on other layers.
-  * **`Application/RaTemplate.Application/`**: This layer orchestrates the domain logic. It would contain application services, CQRS (Command Query Responsibility Segregation) handlers, DTOs (Data Transfer Objects), and interfaces for infrastructure concerns (like repositories). It depends on the Domain layer.
+  * **`Core/RaTemplate.Domain/`**: Contains business entities, constants, and domain logic, with no dependencies on other layers.
+  * **`Application/RaTemplate.Application/`**: This layer orchestrates the domain logic. It contains feature handlers, validators, DTOs, and abstractions for infrastructure concerns (like the per-provider `IRaTemplateSqlServerDbContext`). It depends on the Domain layer.
   * **`Infrastructure/`**: This layer contains implementations for external concerns.
-    * **`RaTemplate.Infrastructure/`**: A central project for wiring up other infrastructure components.
-    * **`RaTemplate.Integration/`**: Contains services for communicating with external APIs, like the HTTP client setup you have.
-    * **`RaTemplate.Persistence/`**: Implements the data access logic using Entity Framework or Dapper, as chosen by the user.
+    * **`RaTemplate.Infrastructure/`**: A central project for wiring up the other infrastructure components.
+    * **`RaTemplate.Integration/`**: Contains services for communicating with external APIs, including a request/response logging HTTP handler. Excluded when `UseIntegrations` is disabled.
+    * **`RaTemplate.Persistence/`**: Implements the data access logic using Entity Framework Core (SQL Server, Oracle, PostgreSQL, or SQLite — one `DbContext` per selected provider). Excluded when the database is set to `None`.
   * **`Presentation/RaTemplate.Api/`**: This is the entry point of your application—the API project. It handles HTTP requests, routing, and calls into the Application layer. It depends on the Application and Infrastructure layers for dependency injection setup.
+  * **`Presentation/RaTemplate.Api.Contracts/`**: Shared request/response contracts with no project dependencies.
+  * **`tests/RaTemplate.ArchitectureTests/`**: NetArchTest-based tests that enforce layer dependencies and naming conventions.
+  * **`README-template.md` / `CLAUDE-template.md`**: Renamed to `README.md` / `CLAUDE.md` in generated projects; the repository's own `README.md` and `CLAUDE.md` are excluded from scaffolding.
 
 ## 🧠 Summary
 In summary, **RA.CleanArchitecture.Template** template provides a robust and customizable foundation for developing modern, maintainable, and scalable .NET Web APIs.
@@ -158,8 +172,10 @@ In summary, **RA.CleanArchitecture.Template** template provides a robust and cus
 
 | Parameter | Display Name | Description | Type | Default Value | Available Choices |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `Framework` | .NET Target Framework | Select the target framework for the project. | Choice | `.NET 10` | `.NET 10` |
+| `Framework` | .NET Target Framework | Select the target framework for the project. | Choice | `net10.0` | `.NET 10` |
 | `UseAuthorization` | JWT Authorization | Includes JWT-based authorization services and middleware. | Boolean | `true` | `true`, `false` |
 | `UseIntegrations` | Use HTTP Client Integration? | Adds infrastructure for building and consuming external HTTP services. | Boolean | `true` | `true`, `false` |
-| `OpenApiUI` | OpenApi documentation UI. | Selects the user interface for the OpenAPI (Swagger) documentation. | Choice | `scalar` | `scalar`, `swagger` |
-| `Database` | Persistence Layer | Selects the data access technology. Multiple choices can be selected. | Choice | `EfSqlServer` | `EF with SQL Server`, `EF with Oracle`, `Dapper with SQL Server`, `Dapper with Oracle` |
+| `OpenApiUI` | OpenApi documentation UI. | Selects the UI for API documentation. Currently only Scalar is available. | Choice | `scalar` | `scalar` |
+| `Database` | Database provider | Selects the data access technology. Multi-select: repeat the flag to select several providers (one `DbContext` per provider). CLI aliases: `--database`, `-db`. | Choice (multi-select) | `EfSqlServer` | `EfSqlServer`, `EfOracle`, `EfPostgres`, `EfSqlite`, `None` |
+
+> **Note:** Multi-select choices are passed by repeating the option (`--database EfOracle --database EfPostgres`); a single comma-separated token is rejected. `None` must be selected on its own and excludes the Persistence project.

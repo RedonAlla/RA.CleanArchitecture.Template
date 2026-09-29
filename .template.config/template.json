@@ -60,8 +60,8 @@
     },
     "Database": {
       "type": "parameter",
-      "displayName": "Database type",
-      "description": "Select the Database types you want to use in your application.",
+      "displayName": "Database provider",
+      "description": "Select the database provider(s) you want to use in your application. Multiple providers can be selected (one DbContext per provider).",
       "datatype": "choice",
       "allowMultipleValues": true,
       "choices": [
@@ -74,9 +74,24 @@
           "choice": "EfOracle",
           "displayName": "EF with Oracle",
           "description": "Use Entity Framework with Oracle"
+        },
+        {
+          "choice": "EfPostgres",
+          "displayName": "EF with PostgreSQL",
+          "description": "Use Entity Framework with PostgreSQL"
+        },
+        {
+          "choice": "EfSqlite",
+          "displayName": "EF with SQLite",
+          "description": "Use Entity Framework with SQLite"
+        },
+        {
+          "choice": "None",
+          "displayName": "None",
+          "description": "Do not use a database (the Persistence project is not generated). Select it alone."
         }
       ],
-      "defaultValue": ""
+      "defaultValue": "EfSqlServer"
     },
     "UseScalarUI": {
       "type": "computed",
@@ -84,15 +99,23 @@
     },
     "UseEfSqlServer": {
       "type": "computed",
-      "value": "Database.indexOf('EfSqlServer') > -1"
+      "value": "(Database == \"EfSqlServer\")"
     },
     "UseEfOracle": {
       "type": "computed",
-      "value": "Database.indexOf('EfOracle') > -1"
+      "value": "(Database == \"EfOracle\")"
+    },
+    "UseEfPostgres": {
+      "type": "computed",
+      "value": "(Database == \"EfPostgres\")"
+    },
+    "UseEfSqlite": {
+      "type": "computed",
+      "value": "(Database == \"EfSqlite\")"
     },
     "UseAnyDatabase": {
       "type": "computed",
-      "value": "Database.length > 0"
+      "value": "(UseEfSqlServer || UseEfOracle || UseEfPostgres || UseEfSqlite)"
     }
   },
   "sources": [
@@ -100,10 +123,15 @@
       "exclude": [
         "**/[Bb]in/**",
         "**/[Oo]bj/**",
+        "**/.git/**",
+        ".git/**",
         ".template.config/**/*",
         "**/*.filelist",
         "**/*.user",
         "example/**",
+        ".claude/**",
+        ".vscode/**",
+        "**/.DS_Store",
         "README.md",
         "CLAUDE.md"
       ],
@@ -121,8 +149,44 @@
         {
           "condition": "(!UseAnyDatabase)",
           "exclude": [
-            "tests/RaTemplate.ArchitectureTests/PersistenceTests.cs",
-            "src/Core/RaTemplate.Domain/Constants/EntitiesConstraints.cs"
+            "src/Infrastructure/RaTemplate.Persistence/**",
+            "src/Core/RaTemplate.Application/Abstractions/Data/**",
+            "tests/RaTemplate.ArchitectureTests/PersistenceTests.cs"
+          ]
+        },
+        {
+          "condition": "(!UseEfSqlServer)",
+          "exclude": [
+            "src/Infrastructure/RaTemplate.Persistence/Database/Schemas.cs",
+            "src/Infrastructure/RaTemplate.Persistence/Database/RaTemplateSqlServerDbContext.cs",
+            "src/Core/RaTemplate.Application/Abstractions/Data/IRaTemplateSqlServerDbContext.cs"
+          ]
+        },
+        {
+          "condition": "(!UseEfOracle)",
+          "exclude": [
+            "src/Infrastructure/RaTemplate.Persistence/Database/RaTemplateOracleDbContext.cs",
+            "src/Core/RaTemplate.Application/Abstractions/Data/IRaTemplateOracleDbContext.cs"
+          ]
+        },
+        {
+          "condition": "(!UseEfPostgres)",
+          "exclude": [
+            "src/Infrastructure/RaTemplate.Persistence/Database/RaTemplatePostgresDbContext.cs",
+            "src/Core/RaTemplate.Application/Abstractions/Data/IRaTemplatePostgresDbContext.cs"
+          ]
+        },
+        {
+          "condition": "(!UseEfSqlite)",
+          "exclude": [
+            "src/Infrastructure/RaTemplate.Persistence/Database/RaTemplateSqliteDbContext.cs",
+            "src/Core/RaTemplate.Application/Abstractions/Data/IRaTemplateSqliteDbContext.cs"
+          ]
+        },
+        {
+          "condition": "(!UseIntegrations)",
+          "exclude": [
+            "src/Infrastructure/RaTemplate.Integration/**"
           ]
         }
       ]
@@ -130,7 +194,7 @@
   ],
   "primaryOutputs": [
     { "path": "src/Presentation/RaTemplate.Api/RaTemplate.Api.csproj" },
-    { "path": "src/Presentation/RaTemplate.Api/README.md" }
+    { "path": "README-template.md" }
   ],
   "postActions": [
     {

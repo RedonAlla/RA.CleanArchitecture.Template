@@ -9,10 +9,20 @@
     <PackageReference Include="AspNetCore.HealthChecks.Oracle" />
     <PackageReference Include="Oracle.EntityFrameworkCore" />
   <!--#endif -->
+  <!--#if (UseEfPostgres) -->
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  <!--#endif -->
+  <!--#if (UseEfSqlite) -->
+    <PackageReference Include="AspNetCore.HealthChecks.Sqlite" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+  <!--#endif -->
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="RA.Utilities.Data.EntityFramework" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
   </ItemGroup>
 
   <ItemGroup>
