@@ -1,23 +1,23 @@
-//#if (UseScalarUI)
 using Microsoft.Extensions.Options;
 using RA.Utilities.OpenApi.Extensions;
 using RA.Utilities.OpenApi.Settings;
+//#if (UseScalarUI)
 using Scalar.AspNetCore;
 //#endif
 
 namespace RaTemplate.Api.Extensions;
 
 /// <summary>
-/// Provides extension methods for configuring OpenAPI and Scalar API documentation.
+/// Provides extension methods for configuring OpenAPI and the API documentation UI (Scalar or Swagger UI).
 /// </summary>
 public static class OpenApiExtensions
 {
-    //#if (UseScalarUI)
     /// <summary>
-    /// The default title for the Scalar UI if not provided in configuration.
+    /// The default title for the API documentation UI if not provided in configuration.
     /// </summary>
     private const string Title = "Api Title";
 
+    //#if (UseScalarUI)
     /// <summary>
     /// The base64 encoded SVG for the Scalar UI favicon, representing the OpenAPI Initiative logo.
     /// </summary>
@@ -52,21 +52,30 @@ public static class OpenApiExtensions
     }
 
     /// <summary>
-    /// Configures OpenAPI and Scalar API documentation endpoints.
+    /// Configures OpenAPI and API documentation UI (Scalar or Swagger UI) endpoints.
     /// </summary>
     /// <remarks>
-    /// This method maps the OpenAPI specification endpoint and the Scalar API reference UI.
-    /// It sets various options for the Scalar UI, such as title, layout, and authentication settings.
+    /// This method maps the OpenAPI specification endpoint and the selected API documentation UI.
+    /// It sets various UI options, such as title and authentication settings.
     /// The title is read from the "OpenApiInfoSettings:Title" configuration key.
+    /// <para>
+    /// When authorization is enabled, both UIs are configured for Bearer authentication:
+    /// the Bearer security scheme is already part of the OpenAPI document (added by <c>RA.Utilities.OpenApi</c>),
+    /// Scalar gets an explicit Bearer security scheme entry, and Swagger UI keeps the entered
+    /// token across page reloads via <c>persistAuthorization</c>.
+    /// </para>
     /// </remarks>
     /// <param name="app">The <see cref="WebApplication"/> to add the endpoints to.</param>
     public static void UseOpenApi(this WebApplication app)
     {
         app.MapOpenApi();
 
-        //#if (UseScalarUI)
-        OpenApiInfoSettings openApiSettings = app.Services.GetRequiredService<IOptions<OpenApiInfoSettings>>().Value;
+        //#if (UseScalarUI || UseSwaggerUI)
+        OpenApiInfoSettings openApiSettings =
+            app.Services.GetRequiredService<IOptions<OpenApiInfoSettings>>().Value;
 
+        //#endif
+        //#if (UseScalarUI)
         app.MapScalarApiReference("/openapi-ui", options =>
         {
             options.Title = openApiSettings.Title ?? Title;
@@ -76,7 +85,8 @@ public static class OpenApiExtensions
             options.HideModels = false;
             options.Layout = ScalarLayout.Modern;
             options.ShowSidebar = true;
-
+            options.OrderRequiredPropertiesFirst = true;
+            //#if (UseAuthorization)
             options.Authentication = new ScalarAuthenticationOptions
             {
                 SecuritySchemes = new Dictionary<string, ScalarSecurityScheme>
@@ -90,13 +100,19 @@ public static class OpenApiExtensions
                     }
                 }
             };
+            //#endif
         });
         //#endif
         //#if (UseSwaggerUI)
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/openapi/v1.json", "RaTemplate.Api v1");
-            options.DocumentTitle = "RaTemplate Api";
+            options.DocumentTitle = openApiSettings.Title ?? Title;
+            //#if (UseAuthorization)
+            // The Bearer security scheme comes from the OpenAPI document itself (added by RA.Utilities.OpenApi),
+            // which enables the Authorize button; this keeps the entered token across page reloads.
+            options.EnablePersistAuthorization();
+            //#endif
         });
         //#endif
     }

@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Text.Json.Serialization;
 //#if (UseAnyDatabase)
 using HealthChecks.UI.Client;
@@ -24,8 +23,7 @@ internal static class StartupExtensions
             .Configure<JsonOptions>(options => options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()))
             .RegisterOpenApi(configuration)
             .AddExceptionHandler<GlobalExceptionHandler>()
-            .AddProblemDetails()
-            .AddEndpoints(Assembly.GetExecutingAssembly());
+            .AddProblemDetails();
 
         //#if (UseAuthorization)
         services.AddAuthorization(configuration);
@@ -65,7 +63,6 @@ internal static class StartupExtensions
 
         //#if (UseAuthorization)
         app.UseAuth();
-
         //#endif
         app.MapEndpoints();
 
