@@ -5,16 +5,15 @@
 
   <!--#if (UseIntegrations) -->
   <ItemGroup>
-    <PackageVersion Include="RA.Utilities.Integrations" Version="10.0.0-rc.2" />
+    <PackageVersion Include="RA.Utilities.Integrations" Version="10.1.0" />
   </ItemGroup>
   <!--#endif -->
 
   <!--#if (UseAnyDatabase) -->
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Data.Entities" Version="10.1.1" />
-    <PackageVersion Include="RA.Utilities.Data.Abstractions" Version="10.0.3" />
+    <PackageVersion Include="RA.Utilities.Data.Abstractions" Version="10.0.4" />
     <PackageVersion Include="RA.Utilities.Data.EntityFramework" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.12" />
     <!--#if (UseEfSqlServer) -->
     <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
@@ -36,16 +35,16 @@
 
   <!--#if (UseAuthorization) -->
   <ItemGroup>
-    <PackageVersion Include="RA.Utilities.Authorization" Version="10.0.0-rc.2" />
-    <PackageVersion Include="RA.Utilities.Authentication.JwtBearer" Version="10.0.0-rc.2" />
+    <PackageVersion Include="RA.Utilities.Authorization" Version="10.0.2" />
+    <PackageVersion Include="RA.Utilities.Authentication.JwtBearer" Version="10.0.1" />
   </ItemGroup>
   <!--#endif -->
   <ItemGroup>
-    <PackageVersion Include="RA.Utilities.Api" Version="10.0.0-rc.2" />
-    <PackageVersion Include="RA.Utilities.OpenApi" Version="10.0.0-rc.2" />
-    <PackageVersion Include="RA.Utilities.Logging.Core" Version="10.0.0-rc.2" />
-    <PackageVersion Include="RA.Utilities.Api.Middlewares" Version="10.0.0-rc.2" />
-    <PackageVersion Include="RA.Utilities.Feature" Version="10.0.0-rc.2" />
+    <PackageVersion Include="RA.Utilities.Api" Version="10.2.0" />
+    <PackageVersion Include="RA.Utilities.Api.Response" Version="10.0.0" />
+    <PackageVersion Include="RA.Utilities.OpenApi" Version="10.0.11" />
+    <PackageVersion Include="RA.Utilities.Logging.Core" Version="10.1.0" />
+    <PackageVersion Include="RA.Utilities.Feature" Version="10.2.0" />
     <PackageVersion Include="RA.Utilities.Core.ValueObjects" Version="10.0.0" />
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +57,7 @@
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.12" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.12" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
   </ItemGroup>
   <!-- Static code analysis -->

@@ -1,5 +1,5 @@
 using System;
-using RA.Utilities.Api.Middlewares.Extensions;
+using RA.Utilities.Api.Extensions;
 
 namespace RaTemplate.Api.Extensions;
 
@@ -24,11 +24,15 @@ public static class MiddlewareExtensions
             {
                 options.PathsToIgnore.Add("/openapi-ui");
                 options.PathsToIgnore.Add("/openapi");
+                options.PathsToIgnore.Add("/health");
             })
-            .AddHttpLoggingMiddleware(options =>
+            .AddLoggingMiddleware(options =>
             {
+                options.MaxBodyLogLength = 16384;
+                options.WarningThresholdMilliseconds = 15000; //Log Warning if > 2s
                 options.PathsToIgnore.Add("/openapi-ui");
                 options.PathsToIgnore.Add("/openapi");
+                options.PathsToIgnore.Add("/health");
             });
     }
 
@@ -44,6 +48,6 @@ public static class MiddlewareExtensions
     {
         return builder
             .UseDefaultHeadersMiddleware()
-            .UseHttpLoggingMiddleware();
+            .UseLoggingMiddleware();
     }
 }

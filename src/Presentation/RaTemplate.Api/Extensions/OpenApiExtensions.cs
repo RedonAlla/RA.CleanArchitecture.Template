@@ -1,9 +1,7 @@
 //#if (UseScalarUI)
 using Microsoft.Extensions.Options;
-//#endif
 using RA.Utilities.OpenApi.Extensions;
 using RA.Utilities.OpenApi.Settings;
-//#if (UseScalarUI)
 using Scalar.AspNetCore;
 //#endif
 

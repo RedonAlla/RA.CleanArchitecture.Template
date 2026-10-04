@@ -8,7 +8,7 @@ internal static class AuthorizationExtensions
     public static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
         services
-            .AddAppUser()
+            .AddUserContext()
             .AddJwtBearerAuthentication(configuration);
 
         // Here you can add your Authorization policies.
