@@ -1,25 +1,54 @@
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
+using RA.Utilities.Api.Extensions;
+using RA.Utilities.Authentication.JwtBearer.Extensions;
 using RA.Utilities.Logging.Core.Extensions;
-using RaTemplate.Api;
+using RaTemplate.Api.ServiceConfiguration;
+using RaTemplate.Application;
+using RaTemplate.Infrastructure;
 //#if (UseAnyDatabase)
 using RaTemplate.Persistence.Database;
 //#endif
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+IConfiguration configuration = builder.Configuration;
 
 builder.AddLoggingWithConfiguration();
 
-builder.Services.AddServices(builder.Configuration);
+builder.Services
+    .Configure<JsonOptions>(options => options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+    .AddDefaultHealthChecks()
+    .AddOpenApi(configuration)
+    .AddRaExceptionHandling()
+    .AddProblemDetails();
+//#if (UseAuthorization)
+builder.Services.AddAuthorization(configuration);
+//#endif
+builder.Services
+    .AddApplicationServices()
+    .AddInfrastructureServices(configuration)
+    .AddDefaultMiddlewares();
 
 WebApplication app = builder.Build();
 
 //#if (UseAnyDatabase)
 if (app.Environment.IsDevelopment())
 {
-    using IServiceScope scope = app.Services.CreateScope();
-    await scope.InitializeDatabaseAsync();
+    await RaTemplateDbInitializer.InitializeDatabaseAsync(app.Services);
+}
+//#endif
+
+if (!app.Environment.IsProduction())
+{
+    app.UseOpenApi();
 }
 
+app.MapHealthCheckEndpoints()
+   .UseDefaultMiddlewares();
+
+//#if (UseAuthorization)
+app.UseAuth();
 //#endif
-app.UsePipelines();
+app.MapEndpoints();
 
 await app.RunAsync();

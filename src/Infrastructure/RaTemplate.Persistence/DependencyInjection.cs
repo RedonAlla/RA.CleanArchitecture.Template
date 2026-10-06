@@ -31,7 +31,6 @@ public static class DependencyInjection
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<BaseEntitySaveChangesInterceptor>();
-        services.AddScoped(typeof(RaTemplateDbContextInitializer<>));
 
         //#if (UseEfSqlServer)
         services.AddDbContext<RaTemplateSqlServerDbContext>((provider, options) =>

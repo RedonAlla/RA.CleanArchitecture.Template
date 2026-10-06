@@ -1,7 +1,7 @@
 using RA.Utilities.Authentication.JwtBearer.Extensions;
 using RA.Utilities.Authorization.Extensions;
 
-namespace RaTemplate.Api.Extensions;
+namespace RaTemplate.Api.ServiceConfiguration;
 
 internal static class AuthorizationExtensions
 {

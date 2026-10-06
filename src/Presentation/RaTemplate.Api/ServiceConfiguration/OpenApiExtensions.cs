@@ -5,7 +5,7 @@ using RA.Utilities.OpenApi.Settings;
 using Scalar.AspNetCore;
 //#endif
 
-namespace RaTemplate.Api.Extensions;
+namespace RaTemplate.Api.ServiceConfiguration;
 
 /// <summary>
 /// Provides extension methods for configuring OpenAPI and the API documentation UI (Scalar or Swagger UI).
@@ -15,7 +15,7 @@ public static class OpenApiExtensions
     /// <summary>
     /// The default title for the API documentation UI if not provided in configuration.
     /// </summary>
-    private const string Title = "Api Title";
+    private const string Title = "RaTemplate.Api";
 
     //#if (UseScalarUI)
     /// <summary>
@@ -42,7 +42,7 @@ public static class OpenApiExtensions
     /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
     /// <param name="configuration">The application's <see cref="IConfiguration"/>.</param>
     /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
-    public static IServiceCollection RegisterOpenApi(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddOpenApi(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .Configure<OpenApiInfoSettings>(configuration.GetSection(OpenApiInfoSettings.AppSettingsKey))
@@ -73,15 +73,15 @@ public static class OpenApiExtensions
         //#if (UseScalarUI || UseSwaggerUI)
         OpenApiInfoSettings openApiSettings =
             app.Services.GetRequiredService<IOptions<OpenApiInfoSettings>>().Value;
-
         //#endif
+
         //#if (UseScalarUI)
         app.MapScalarApiReference("/openapi-ui", options =>
         {
             options.Title = openApiSettings.Title ?? Title;
             options.DarkMode = false;
             options.Favicon = FavIcon;
-            options.DefaultHttpClient = new KeyValuePair<ScalarTarget, ScalarClient>(ScalarTarget.CSharp, ScalarClient.RestSharp);
+            options.DefaultHttpClient = new KeyValuePair<ScalarTarget, ScalarClient>(ScalarTarget.Shell, ScalarClient.Curl);
             options.HideModels = false;
             options.Layout = ScalarLayout.Modern;
             options.ShowSidebar = true;
