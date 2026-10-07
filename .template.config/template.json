@@ -138,8 +138,9 @@
         "**/*.filelist",
         "**/*.user",
         "example/**",
-        ".claude/**",
+        ".claude/settings.local.json",
         ".vscode/**",
+        "docs/**",
         "**/.DS_Store",
         "README.md",
         "CLAUDE.md"
