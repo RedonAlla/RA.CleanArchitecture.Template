@@ -5,34 +5,24 @@
   "learnMoreLink": "https://redonalla.github.io/RA.Utilities/vs-template/intro",
   "symbolInfo": [
     {
+      "id": "Framework",
+      "isVisible": true
+    },
+    {
       "id": "UseAuthorization",
-      "isVisible": true,
-      "name": {
-        "text": "Use Authorization"
-      },
-      "description": {
-        "text": "Chose if you want to use Authorization in your application."
-      }
+      "isVisible": true
     },
     {
-      "id": "UseScalarUI",
-      "isVisible": false,
-      "name": {
-        "text": "Scalar UI"
-      },
-      "description": {
-        "text": "Select Scalar UI for your API documentation."
-      }
+      "id": "UseIntegrations",
+      "isVisible": true
     },
     {
-      "id": "UseSwaggerUI",
-      "isVisible": false,
-      "name": {
-        "text": "Swagger UI"
-      },
-      "description": {
-        "text": "Select Swagger UI for your API documentation."
-      }
+      "id": "OpenApiUI",
+      "isVisible": true
+    },
+    {
+      "id": "Database",
+      "isVisible": true
     }
   ]
 }
