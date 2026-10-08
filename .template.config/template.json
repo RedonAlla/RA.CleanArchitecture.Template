@@ -4,7 +4,7 @@
   "classifications": ["web", "api"],
   "identity": "RA.CleanArchitecture.Template",
   "groupIdentity": "RA.CleanArchitecture.Template",
-  "name": "Clean Architecture Solution",
+  "name": "RA Clean Architecture Solution",
   "shortName": "RA.Template",
   "tags": {
     "language": "C#",
@@ -12,7 +12,7 @@
   },
   "defaultName": "RaTemplate",
   "sourceName": "RaTemplate",
-  "description": "Template for building Web Api with Clean Architecture",
+  "description": "Clean Architecture solution template for .NET 10 Web APIs: layered Domain/Application/Infrastructure/Presentation projects with CQRS, EF Core (SQL Server, Oracle, PostgreSQL, or SQLite), optional JWT authorization and HTTP client integrations, Scalar or Swagger OpenAPI UI, health checks, and architecture tests.",
   "preferNameDirectory": true,
   "symbols": {
     "Framework": {
