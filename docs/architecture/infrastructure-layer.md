@@ -103,7 +103,7 @@ Each provider reads its own connection string by convention — `RaTemplate{Prov
 
 ### Database initialization
 
-`RaTemplateDbInitializer.InitializeDatabaseAsync` is invoked from `Program.cs` **only when the environment is Development**. It resolves the SQL Server context, runs `EnsureDeleted` then `EnsureCreated`, and logs the generated create script. A private `SeedAsync` stub is included for you to extend with default data (it is not wired in by default). Swap this delete-and-recreate strategy for migrations before going to production.
+`RaTemplateDbInitializer.InitializeDatabaseAsync` is invoked from `Program.cs` **only when the environment is Development**. It creates a scope and, for each selected provider (SQL Server, Oracle, Postgres, SQLite), resolves that provider's context, runs `EnsureDeletedAsync` then `EnsureCreatedAsync`, and logs the generated create script. A private `SeedAsync` stub is included for you to extend with default data (it is not wired in by default). Swap this delete-and-recreate strategy for migrations before going to production.
 
 ## RaTemplate.Integration
 

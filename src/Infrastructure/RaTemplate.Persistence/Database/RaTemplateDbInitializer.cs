@@ -21,14 +21,25 @@ public static class RaTemplateDbInitializer
     {
         using IServiceScope scope = serviceProvider.CreateScope();
 
-        RaTemplateSqlServerDbContext dbContext =
-            scope.ServiceProvider.GetRequiredService<RaTemplateSqlServerDbContext>();
-
-        ILogger<RaTemplateSqlServerDbContext> logger =
-            scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateSqlServerDbContext>>();
-
         //#if (UseEfSqlServer)
-        await InitializeAsync(dbContext, logger);
+        await InitializeAsync(
+            scope.ServiceProvider.GetRequiredService<RaTemplateSqlServerDbContext>(),
+            scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateSqlServerDbContext>>());
+        //#endif
+        //#if (UseEfOracle)
+        await InitializeAsync(
+            scope.ServiceProvider.GetRequiredService<RaTemplateOracleDbContext>(),
+            scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateOracleDbContext>>());
+        //#endif
+        //#if (UseEfPostgres)
+        await InitializeAsync(
+            scope.ServiceProvider.GetRequiredService<RaTemplatePostgresDbContext>(),
+            scope.ServiceProvider.GetRequiredService<ILogger<RaTemplatePostgresDbContext>>());
+        //#endif
+        //#if (UseEfSqlite)
+        await InitializeAsync(
+            scope.ServiceProvider.GetRequiredService<RaTemplateSqliteDbContext>(),
+            scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateSqliteDbContext>>());
         //#endif
     }
 
@@ -36,7 +47,8 @@ public static class RaTemplateDbInitializer
     /// Creates the database if it does not exist.
     /// </summary>
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
-    private static async Task InitializeAsync(RaTemplateSqlServerDbContext context, ILogger logger)
+    private static async Task InitializeAsync<TContext>(TContext context, ILogger<TContext> logger)
+        where TContext : DbContext
     {
         try
         {
@@ -44,10 +56,13 @@ public static class RaTemplateDbInitializer
             await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
 
-            string sql = context.Database.GenerateCreateScript();
-            logger.LogInformation("======================= Data Base {DbContext} script =======================", typeof(RaTemplateSqlServerDbContext).Name);
-            logger.LogInformation("{SqlScript}", sql);
-            logger.LogInformation("============================================================================");
+            if (logger.IsEnabled(LogLevel.Information))
+            {
+                string sql = context.Database.GenerateCreateScript();
+                logger.LogInformation("======================= Data Base {DbContext} script =======================", typeof(TContext).Name);
+                logger.LogInformation("{SqlScript}", sql);
+                logger.LogInformation("============================================================================");
+            }
         }
         catch (Exception ex)
         {
@@ -60,7 +75,8 @@ public static class RaTemplateDbInitializer
     /// Seeds the database with default data.
     /// </summary>
     /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
-    private static async Task SeedAsync(RaTemplateSqlServerDbContext context, ILogger logger)
+    private static async Task SeedAsync<TContext>(TContext context, ILogger<TContext> logger)
+        where TContext : DbContext
     {
         try
         {

@@ -1,7 +1,9 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
 using RA.Utilities.Api.Extensions;
+//#if (UseAuthorization)
 using RA.Utilities.Authentication.JwtBearer.Extensions;
+//#endif
 using RA.Utilities.Logging.Core.Extensions;
 using RaTemplate.Api.ServiceConfiguration;
 using RaTemplate.Application;
@@ -34,7 +36,9 @@ WebApplication app = builder.Build();
 //#if (UseAnyDatabase)
 if (app.Environment.IsDevelopment())
 {
+    //#if (UseAnyDatabase)
     await RaTemplateDbInitializer.InitializeDatabaseAsync(app.Services);
+    //#endif
 }
 //#endif
 
