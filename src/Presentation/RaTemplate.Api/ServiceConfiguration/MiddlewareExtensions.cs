@@ -47,21 +47,4 @@ public static class MiddlewareExtensions
                 options.PathsToIgnore.UnionWith(pathsToIgnore);
             });
     }
-
-    /// <summary>
-    /// Adds custom middlewares to the application's request pipeline.
-    /// </summary>
-    /// <remarks>
-    /// This method currently adds the HTTP logging middleware to the pipeline.
-    /// </remarks>
-    /// <param name="builder">The <see cref="IApplicationBuilder"/> to add the middleware to.</param>
-    /// <returns>The <see cref="IApplicationBuilder"/> to allow for fluent chaining.</returns>
-    public static IApplicationBuilder UseDefaultMiddlewares(this IApplicationBuilder builder)
-    {
-        return builder
-            .UseDefaultHeadersMiddleware()
-            .UseLoggingMiddleware()
-            .UseHttpsRedirection()
-            .UseExceptionHandler();
-    }
 }

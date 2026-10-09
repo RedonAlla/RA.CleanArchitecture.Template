@@ -21,12 +21,12 @@ builder.Services
     .Configure<JsonOptions>(options => options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()))
     .AddDefaultHealthChecks()
     .AddOpenApi(configuration)
+    .AddCorsPolicies(configuration, builder.Environment)
     .AddRaExceptionHandling()
-    .AddProblemDetails();
+    .AddProblemDetails()
 //#if (UseAuthorization)
-builder.Services.AddAuthorization(configuration);
+    .AddAuthorization(configuration)
 //#endif
-builder.Services
     .AddApplicationServices()
     .AddInfrastructureServices(configuration)
     .AddDefaultMiddlewares();
@@ -45,7 +45,11 @@ if (!app.Environment.IsProduction())
 }
 
 app.MapHealthCheckEndpoints()
-   .UseDefaultMiddlewares();
+   .UseDefaultHeadersMiddleware()
+   .UseLoggingMiddleware()
+   .UseCors()
+   .UseHttpsRedirection()
+   .UseExceptionHandler();
 
 //#if (UseAuthorization)
 app.UseAuth();
