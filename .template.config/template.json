@@ -15,6 +15,10 @@
   "description": "Clean Architecture solution template for .NET 10 Web APIs: layered Domain/Application/Infrastructure/Presentation projects with CQRS, EF Core (SQL Server, Oracle, PostgreSQL, or SQLite), optional JWT authorization and HTTP client integrations, Scalar or Swagger OpenAPI UI, health checks, and architecture tests.",
   "preferNameDirectory": true,
   "symbols": {
+    "HostIdentifier": {
+      "type": "bind",
+      "binding": "host:HostIdentifier"
+    },
     "Framework": {
       "type": "parameter",
       "displayName": ".NET Target Framework",
@@ -204,18 +208,24 @@
   ],
   "primaryOutputs": [
     { "path": "src/Presentation/RaTemplate.Api/RaTemplate.Api.csproj" },
-    { "path": "README-template.md" }
+    {
+      "path": "README-template.md",
+      "condition": "(HostIdentifier != \"dotnetcli\" && HostIdentifier != \"dotnetcli-preview\")"
+    }
   ],
   "postActions": [
     {
-      "actionId": "D396686C-DE0E-4DE6-906A-29C1699A8DB6",
+      "id": "restore",
       "description": "Restore NuGet packages required by this project.",
       "manualInstructions": [ { "text": "Run 'dotnet restore'" } ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
       "continueOnError": true
     },
     {
+      "id": "open-file",
+      "condition": "(HostIdentifier != \"dotnetcli\" && HostIdentifier != \"dotnetcli-preview\")",
       "description": "Opens README.md in the editor",
-      "manualInstructions": [ ],
+      "manualInstructions": [],
       "actionId": "84C0DA21-51C8-4541-9940-6CA19AF04EE6",
       "args": {
         "files": "1"

@@ -20,9 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--#if (UseAnyDatabase) -->
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
-    <!--#endif -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
   </ItemGroup>
 

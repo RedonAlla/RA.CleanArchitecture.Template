@@ -36,12 +36,9 @@ WebApplication app = builder.Build();
 //#if (UseAnyDatabase)
 if (app.Environment.IsDevelopment())
 {
-    //#if (UseAnyDatabase)
     await RaTemplateDbInitializer.InitializeDatabaseAsync(app.Services);
-    //#endif
 }
 //#endif
-
 if (!app.Environment.IsProduction())
 {
     app.UseOpenApi();
