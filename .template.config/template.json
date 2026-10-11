@@ -142,7 +142,7 @@
         "**/*.filelist",
         "**/*.user",
         "example/**",
-        ".claude/settings.local.json",
+        ".claude/**",
         ".vscode/**",
         "docs/**",
         "**/.DS_Store",
@@ -151,7 +151,8 @@
       ],
       "rename": {
         "README-template.md": "README.md",
-        "CLAUDE-template.md": "CLAUDE.md"
+        "CLAUDE-template.md": "CLAUDE.md",
+        ".claude-template": ".claude"
       },
       "modifiers": [
         {
