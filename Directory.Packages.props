@@ -5,7 +5,7 @@
 
   <!--#if (UseIntegrations) -->
   <ItemGroup>
-    <PackageVersion Include="RA.Utilities.Integrations" Version="10.1.0" />
+    <PackageVersion Include="RA.Utilities.Integrations" Version="10.1.1" />
   </ItemGroup>
   <!--#endif -->
 
@@ -40,9 +40,9 @@
   </ItemGroup>
   <!--#endif -->
   <ItemGroup>
-    <PackageVersion Include="RA.Utilities.Api" Version="10.2.0" />
+    <PackageVersion Include="RA.Utilities.Api" Version="10.2.1" />
     <PackageVersion Include="RA.Utilities.Api.Response" Version="10.0.0" />
-    <PackageVersion Include="RA.Utilities.OpenApi" Version="10.0.11" />
+    <PackageVersion Include="RA.Utilities.OpenApi" Version="10.1.0" />
     <PackageVersion Include="RA.Utilities.Logging.Core" Version="10.1.0" />
     <PackageVersion Include="RA.Utilities.Feature" Version="10.2.0" />
     <PackageVersion Include="RA.Utilities.Core.ValueObjects" Version="10.0.0" />
