@@ -10,15 +10,17 @@ namespace RaTemplate.Integration;
 /// </summary>
 public static class DependencyInjection
 {
-    /// <summary>
-    /// Adds integration services to the specified <see cref="IServiceCollection"/>.
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
-    /// <param name="configuration">The application's <see cref="IConfiguration"/>.</param>
-    /// <returns>The <see cref="IServiceCollection"/> to allow for chaining of service registrations.</returns>
-    public static IServiceCollection AddIntegrationServices(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        services.AddScopedHttpMessageHandler<RequestResponseLoggingHandler>();
-        return services;
+        /// <summary>
+        /// Adds integration services to the specified <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="configuration">The application's <see cref="IConfiguration"/>.</param>
+        /// <returns>The <see cref="IServiceCollection"/> to allow for chaining of service registrations.</returns>
+        public IServiceCollection AddIntegrationServices(IConfiguration configuration)
+        {
+            services.AddScopedHttpMessageHandler<RequestResponseLoggingHandler>();
+            return services;
+        }
     }
 }

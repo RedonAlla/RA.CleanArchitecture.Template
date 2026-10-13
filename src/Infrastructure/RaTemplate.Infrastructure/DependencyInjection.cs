@@ -14,21 +14,23 @@ namespace RaTemplate.Infrastructure;
 /// </summary>
 public static class DependencyInjection
 {
-    /// <summary>
-    /// Adds infrastructure services to the specified <see cref="IServiceCollection"/>.
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
-    /// <param name="configuration">The application's <see cref="IConfiguration"/>.</param>
-    /// <returns>The <see cref="IServiceCollection"/> to allow for chaining of service registrations.</returns>
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        //#if (UseAnyDatabase)
-        services.AddPersistence(configuration);
-        //#endif
-        //#if (UseIntegrations)
-        services.AddIntegrationServices(configuration);
-        //#endif
+        /// <summary>
+        /// Adds infrastructure services to the specified <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="configuration">The application's <see cref="IConfiguration"/>.</param>
+        /// <returns>The <see cref="IServiceCollection"/> to allow for chaining of service registrations.</returns>
+        public IServiceCollection AddInfrastructureServices(IConfiguration configuration)
+        {
+            //#if (UseAnyDatabase)
+            services.AddPersistence(configuration);
+            //#endif
+            //#if (UseIntegrations)
+            services.AddIntegrationServices(configuration);
+            //#endif
 
-        return services;
+            return services;
+        }
     }
 }
