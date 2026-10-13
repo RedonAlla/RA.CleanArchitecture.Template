@@ -5,7 +5,7 @@ namespace RaTemplate.Api.ServiceConfiguration;
 /// <summary>
 /// Provides extension methods for registering and using custom middlewares.
 /// </summary>
-public static class MiddlewareExtensions
+internal static class MiddlewareExtensions
 {
     /// <summary>
     /// The maximum length of the request or response body to log in bytes.
@@ -26,25 +26,27 @@ public static class MiddlewareExtensions
         "/health"
     ];
 
-    /// <summary>
-    /// Adds custom middlewares to the service collection.
-    /// </summary>
-    /// <remarks>
-    /// This method currently registers the HTTP logging middleware and configures it to ignore
-    /// specific paths like the root ("/") for the API documentation UI and the OpenAPI specification endpoint ("/openapi").
-    /// </remarks>
-    /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
-    /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
-    public static IServiceCollection AddDefaultMiddlewares(this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        return services
-            .AddDefaultHeadersMiddleware(options =>
-                options.PathsToIgnore.UnionWith(pathsToIgnore))
-            .AddLoggingMiddleware(options =>
-            {
-                options.MaxBodyLogLength = maxBodyLogLength;
-                options.WarningThresholdMilliseconds = warningThresholdMilliseconds; //Log Warning if > 2s
-                options.PathsToIgnore.UnionWith(pathsToIgnore);
-            });
+        /// <summary>
+        /// Adds custom middlewares to the service collection.
+        /// </summary>
+        /// <remarks>
+        /// This method currently registers the HTTP logging middleware and configures it to ignore
+        /// specific paths like the root ("/") for the API documentation UI and the OpenAPI specification endpoint ("/openapi").
+        /// </remarks>
+        /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
+        public IServiceCollection AddDefaultMiddlewares()
+        {
+            return services
+                .AddDefaultHeadersMiddleware(options =>
+                    options.PathsToIgnore.UnionWith(pathsToIgnore))
+                .AddLoggingMiddleware(options =>
+                {
+                    options.MaxBodyLogLength = maxBodyLogLength;
+                    options.WarningThresholdMilliseconds = warningThresholdMilliseconds; //Log Warning if > 2s
+                    options.PathsToIgnore.UnionWith(pathsToIgnore);
+                });
+        }
     }
 }

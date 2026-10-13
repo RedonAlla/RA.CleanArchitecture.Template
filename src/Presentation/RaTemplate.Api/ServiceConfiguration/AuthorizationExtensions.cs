@@ -5,14 +5,17 @@ namespace RaTemplate.Api.ServiceConfiguration;
 
 internal static class AuthorizationExtensions
 {
-    public static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        services
-            .AddUserContext()
-            .AddJwtBearerAuthentication(configuration);
+        public IServiceCollection AddAuthorization(IConfiguration configuration)
+        {
+            services
+                .AddUserContext()
+                .AddJwtBearerAuthentication(configuration);
 
-        // Here you can add your Authorization policies.
+            // Here you can add your Authorization policies.
 
-        return services;
+            return services;
+        }
     }
 }
