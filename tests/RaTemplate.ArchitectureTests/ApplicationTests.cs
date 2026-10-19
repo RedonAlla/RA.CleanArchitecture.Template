@@ -1,7 +1,7 @@
 using System;
 using FluentValidation;
 using NetArchTest.Rules;
-using RA.Utilities.Feature.Abstractions;
+using RA.Utilities.Dispatcher.Abstractions;
 using Xunit;
 
 namespace RaTemplate.ArchitectureTests;
