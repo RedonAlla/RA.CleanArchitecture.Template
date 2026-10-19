@@ -12,35 +12,37 @@ namespace RaTemplate.Persistence.Database;
 /// </summary>
 public static class RaTemplateDbInitializer
 {
-    /// <summary>
-    /// Initializes and seeds the application databases.
-    /// </summary>
-    /// <param name="serviceProvider">The <see cref="IServiceProvider" /> used to resolve the database initializers.</param>
-    /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
-    public static async Task InitializeDatabaseAsync(this IServiceProvider serviceProvider)
+    extension(IServiceProvider serviceProvider)
     {
-        using IServiceScope scope = serviceProvider.CreateScope();
+        /// <summary>
+        /// Initializes and seeds the application databases.
+        /// </summary>
+        /// <returns>A <see cref="Task" /> representing the asynchronous operation.</returns>
+        public async Task InitializeDatabaseAsync()
+        {
+            using IServiceScope scope = serviceProvider.CreateScope();
 
-        //#if (UseEfSqlServer)
-        await InitializeAsync(
-            scope.ServiceProvider.GetRequiredService<RaTemplateSqlServerDbContext>(),
-            scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateSqlServerDbContext>>());
-        //#endif
-        //#if (UseEfOracle)
-        await InitializeAsync(
-            scope.ServiceProvider.GetRequiredService<RaTemplateOracleDbContext>(),
-            scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateOracleDbContext>>());
-        //#endif
-        //#if (UseEfPostgres)
-        await InitializeAsync(
-            scope.ServiceProvider.GetRequiredService<RaTemplatePostgresDbContext>(),
-            scope.ServiceProvider.GetRequiredService<ILogger<RaTemplatePostgresDbContext>>());
-        //#endif
-        //#if (UseEfSqlite)
-        await InitializeAsync(
-            scope.ServiceProvider.GetRequiredService<RaTemplateSqliteDbContext>(),
-            scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateSqliteDbContext>>());
-        //#endif
+            //#if (UseEfSqlServer)
+            await InitializeAsync(
+                scope.ServiceProvider.GetRequiredService<RaTemplateSqlServerDbContext>(),
+                scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateSqlServerDbContext>>());
+            //#endif
+            //#if (UseEfOracle)
+            await InitializeAsync(
+                scope.ServiceProvider.GetRequiredService<RaTemplateOracleDbContext>(),
+                scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateOracleDbContext>>());
+            //#endif
+            //#if (UseEfPostgres)
+            await InitializeAsync(
+                scope.ServiceProvider.GetRequiredService<RaTemplatePostgresDbContext>(),
+                scope.ServiceProvider.GetRequiredService<ILogger<RaTemplatePostgresDbContext>>());
+            //#endif
+            //#if (UseEfSqlite)
+            await InitializeAsync(
+                scope.ServiceProvider.GetRequiredService<RaTemplateSqliteDbContext>(),
+                scope.ServiceProvider.GetRequiredService<ILogger<RaTemplateSqliteDbContext>>());
+            //#endif
+        }
     }
 
     /// <summary>

@@ -19,7 +19,7 @@ public static class DependencyInjection
         /// <returns>The <see cref="IServiceCollection"/> to allow for chaining of service registrations.</returns>
         public IServiceCollection AddIntegrationServices(IConfiguration configuration)
         {
-            services.AddScopedHttpMessageHandler<RequestResponseLoggingHandler>();
+            services.AddScopedHttpMessageHandler<LoggingHandler>();
             return services;
         }
     }

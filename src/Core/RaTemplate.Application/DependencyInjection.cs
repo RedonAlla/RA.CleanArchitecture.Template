@@ -1,7 +1,7 @@
 using System.Reflection;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using RA.Utilities.Feature.Extensions;
+using RA.Utilities.Dispatcher.Extensions;
 
 namespace RaTemplate.Application;
 

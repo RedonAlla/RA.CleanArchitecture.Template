@@ -11,7 +11,7 @@ namespace RaTemplate.ArchitectureTests;
 /// </summary>
 public class ApiTests
 {
-    private const string MediatorNameSpace = "RA.Utilities.Feature.Abstractions";
+    private const string MediatorNameSpace = "RA.Utilities.Dispatcher.Abstractions";
 
     /// <summary>
     /// Verifies that endpoints depend on the mediator abstraction.
