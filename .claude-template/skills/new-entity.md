@@ -102,12 +102,13 @@ In the DbContext class that implements the abstraction chosen in step 3, add the
 
 For these property types use the helpers from the package `RA.Utilities.Data.EntityFramework`.
 
-| Property type | Use                                                                 | Namespace                                          |
-|---------------|---------------------------------------------------------------------|----------------------------------------------------|
-| `Currency`    | `HasConversion<CurrencyConverter>()`                                | `RA.Utilities.Data.EntityFramework.Conventions`    |
-| `Email`       | `HasConversion<EmailConverter>()`                                   | `RA.Utilities.Data.EntityFramework.Conventions`    |
-| `SSN`         | `HasConversion<SsnConverter>()`                                     | `RA.Utilities.Data.EntityFramework.Conventions`    |
-| `Money`       | `HasMoney()` extension method (do **not** use a `ValueConverter`)   | `RA.Utilities.Data.EntityFramework.Extensions`     |
+| Property type   | Use                                                                 | Namespace                                          |
+|-----------------|---------------------------------------------------------------------|----------------------------------------------------|
+| `Currency`      | `HasConversion<CurrencyConverter>()`                                | `RA.Utilities.Data.EntityFramework.Conventions`    |
+| `Email`         | `HasConversion<EmailConverter>()`                                   | `RA.Utilities.Data.EntityFramework.Conventions`    |
+| `SSN`           | `HasConversion<SsnConverter>()`                                     | `RA.Utilities.Data.EntityFramework.Conventions`    |
+| `IbanConverter` | `HasConversion<IbanConverter>()`                                    | `RA.Utilities.Data.EntityFramework.Conventions`    |
+| `Money`         | `HasMoney()` extension method (do **not** use a `ValueConverter`)   | `RA.Utilities.Data.EntityFramework.Extensions`     |
 
 Add the matching `using` for each helper you use.
 
