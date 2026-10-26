@@ -96,7 +96,7 @@ Claude: Let me analyze your project structure first...
 
 ## Plan: Product Catalog Feature
 
-**Architecture:** Vertical Slice Architecture
+**Architecture:** CLEAN Architecture
 **Affected layers:** Features/, Infrastructure/Persistence/, Tests/
 **Estimated steps:** 6
 
