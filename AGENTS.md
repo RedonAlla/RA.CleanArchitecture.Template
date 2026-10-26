@@ -107,7 +107,7 @@ Each workflow skill registers its own slash command and carries its methodology 
 | `/spec` | — | — | Relentless questioning → agreed spec in `docs/specs/` |
 | `/plan` | architecture-advisor | dotnet-architect | Architecture-aware planning (consumes approved specs) |
 | `/verify` | — | — | 7-phase verification pipeline |
-| `/code-review` | convention-learner | code-reviewer | MCP-powered, blast-radius-prioritized code review |
+| `/code-review` | convention-learner | code-reviewer | blast-radius-prioritized code review |
 | `/build-fix` | — | build-error-resolver | Bounded build-fix and test-fix loops |
 | `/checkpoint` | — | — | Mid-session save (commit + handoff) |
 | `/security-scan` | — | security-auditor | OWASP + secrets + dependency audit |
@@ -133,9 +133,9 @@ When two agents could handle a query:
 
 For detailed context management strategies, see the **`workflow-mastery`** skill (Context Discipline section).
 
-- **Small queries** (single pattern/fix): Load 1-2 skills, use MCP tools for context
-- **Medium queries** (feature implementation): Load 3-4 skills, use MCP tools to understand existing code
-- **Large queries** (architecture review): Load all relevant skills, use `get_project_graph` first to understand the solution shape
+- **Small queries** (single pattern/fix): Load 1-2 skills
+- **Medium queries** (feature implementation): Load 3-4 skills, read CLAUDE.md to underspend existing code
+- **Large queries** (architecture review): Load all relevant skills, read all repository first to understand the solution shape
 
 ## Response Patterns
 
@@ -144,4 +144,3 @@ All agents should:
 2. **Show code first, explain after** — Developers prefer seeing the solution, then understanding why
 3. **Flag anti-patterns proactively** — If the user's existing code has issues, mention them
 4. **Reference skills** — Point to relevant skills for deeper reading
-5. **Use MCP tools before reading files** — Reduce token consumption
