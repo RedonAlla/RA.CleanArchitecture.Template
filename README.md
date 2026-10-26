@@ -149,7 +149,8 @@ RA.CleanArchitecture.Template/
 ├── Directory.Packages.props
 ├── RaTemplate.sln
 ├── README-template.md
-└── CLAUDE-template.md
+├── CLAUDE-template.md
+└── QODER-template.md
 ```
 ### Explanation of the Structure:
   * **`.template.config/`**: Holds the template metadata (`template.json`, `dotnetcli.host.json`, and `ide.host.json`), which define the parameters, conditional inclusions, and renames used by `dotnet new`.
@@ -163,7 +164,8 @@ RA.CleanArchitecture.Template/
   * **`Presentation/RaTemplate.Api/`**: This is the entry point of your application—the API project. It handles HTTP requests, routing, and calls into the Application layer. It depends on the Application and Infrastructure layers for dependency injection setup.
   * **`Presentation/RaTemplate.Api.Contracts/`**: Shared request/response contracts with no project dependencies.
   * **`tests/RaTemplate.ArchitectureTests/`**: NetArchTest-based tests that enforce layer dependencies and naming conventions.
-  * **`README-template.md` / `CLAUDE-template.md`**: Renamed to `README.md` / `CLAUDE.md` in generated projects; the repository's own `README.md` and `CLAUDE.md` are excluded from scaffolding.
+  * **`README-template.md` / `CLAUDE-template.md` / `QODER-template.md`**: Renamed to `README.md` / `CLAUDE.md` / `QODER.md` in generated projects; the repository's own `README.md`, `CLAUDE.md`, and `QODER.md` are excluded from scaffolding.
+  * **`.claude-template/` / `.qoder-template/`**: Renamed to `.claude/` / `.qoder/` in generated projects; they ship the agent skills (`enforce-editorconfig`, `new-entity`) for Claude Code and Qoder. The repository's own `.claude/` and `.qoder/` are excluded from scaffolding.
 
 ## 🧠 Summary
 In summary, **RA.CleanArchitecture.Template** template provides a robust and customizable foundation for developing modern, maintainable, and scalable .NET Web APIs.

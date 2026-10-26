@@ -143,16 +143,20 @@
         "**/*.user",
         "example/**",
         ".claude/**",
+        ".qoder/**",
         ".vscode/**",
         "docs/**",
         "**/.DS_Store",
         "README.md",
-        "CLAUDE.md"
+        "CLAUDE.md",
+        "QODER.md"
       ],
       "rename": {
         "README-template.md": "README.md",
         "CLAUDE-template.md": "CLAUDE.md",
-        ".claude-template": ".claude"
+        "QODER-template.md": "QODER.md",
+        ".claude-template": ".claude",
+        ".qoder-template": ".qoder"
       },
       "modifiers": [
         {

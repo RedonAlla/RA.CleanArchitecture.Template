@@ -9,8 +9,8 @@ This repository is a .NET solution template (`identity`: `RA.CleanArchitecture.T
 Key `.template.config/template.json` facts:
 
 - `sourceName` / `defaultName`: `RaTemplate` (replaced everywhere on scaffold)
-- `sources.exclude`: repo docs (`README.md`, `CLAUDE.md`), `.template.config/**`, `bin`/`obj`, `.claude/**`, `.vscode/**`
-- `sources.rename`: `README-template.md` → `README.md`, `CLAUDE-template.md` → `CLAUDE.md`
+- `sources.exclude`: repo docs (`README.md`, `CLAUDE.md`, `QODER.md`), `.template.config/**`, `bin`/`obj`, `.claude/**`, `.qoder/**`, `.vscode/**`, `docs/**`
+- `sources.rename`: `README-template.md` → `README.md`, `CLAUDE-template.md` → `CLAUDE.md`, `QODER-template.md` → `QODER.md`, `.claude-template` → `.claude`, `.qoder-template` → `.qoder`
 - `modifiers` exclude optional content per symbol: Persistence + `Application/Abstractions/Data` + `PersistenceTests.cs` when `!UseAnyDatabase`; per-provider `DbContext`/interface files (+ `Schemas.cs` for SQL Server) when the provider is not selected; Integration when `!UseIntegrations`; `AuthorizationExtensions.cs` when `!UseAuthorization`
 - `primaryOutputs`: the API csproj and `README-template.md`; post-actions restore packages and open the generated README
 - `dotnetcli.host.json` exposes `--database` / `-db` aliases; `ide.host.json` exposes the boolean parameters in Visual Studio
