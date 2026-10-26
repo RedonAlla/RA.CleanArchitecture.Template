@@ -35,10 +35,55 @@ Tool: `dotnet build --no-restore` — metric: error count, warning count.
 | D | 0 errors, 16-30 warnings |
 | F | Any errors, or 30+ warnings |
 
-### Dimension 2: Test Coverage
+### Dimension 2: Code Quality
 
+Tool: MCP `detect_antipatterns` — metric: **high-confidence** findings per 1K
+production lines. The tool defaults to production scope; generated code is never
+reported and test/migration code is excluded.
 
-**Check `applicable` first.**  A structurally invalid metric must never become an F.
+| Grade | Criteria |
+|-------|----------|
+| A | 0 high-confidence findings |
+| B | < 0.1 per 1K lines |
+| C | 0.1 - 0.5 per 1K lines |
+| D | 0.5 - 1.5 per 1K lines |
+| F | > 1.5 per 1K lines |
+
+**Unreviewed-medium cap:** a project cannot be graded A while more than 25
+medium-confidence findings remain untriaged. Cap at B and name the categories in
+the report. A clean high-confidence count with hundreds of unexamined mediums is
+not an A — it is an unexamined codebase.
+
+These thresholds are far tighter than raw-count grading because the detectors are
+precise now. A well-maintained 100K-line codebase should produce single-digit
+high-confidence findings; dozens means something real is wrong.
+
+Common findings: async void, sync-over-async, `new HttpClient()`, `DateTime.Now`,
+broad catch blocks, string interpolation in logging, missing CancellationToken.
+
+### Dimension 3: Architecture
+
+Tools: MCP `get_project_graph` (dependency direction), `detect_circular_dependencies`
+at both `scope: "projects"` and `scope: "types"`.
+
+| Grade | Criteria |
+|-------|----------|
+| A | Correct dependency direction, 0 circular deps (project or type level) |
+| B | Correct dependency direction, 1-2 type-level cycles (no project cycles) |
+| C | 1-2 minor direction issues, or 3-5 type-level cycles |
+| D | Project-level circular dependency, or significant layer violations |
+| F | Multiple project-level cycles, no discernible architecture |
+
+### Dimension 4: Test Coverage
+
+Tool: MCP `get_test_coverage_map(projectFilter: each production project)` —
+metric: % of production types with corresponding test classes.
+
+**Check `applicable` first.** When the tool returns `applicable: false`, the
+structural metric is invalid for this codebase and the percentage is meaningless.
+Record the dimension as **Not assessed**, quote `notApplicableReason` and
+`testMethodCount`, and **exclude it from the GPA** (divide by the number of
+dimensions actually graded). A structurally invalid metric must never become an F.
 
 | Grade | Criteria |
 |-------|----------|
@@ -56,7 +101,9 @@ which is what `applicable: false` reports. To grade those, run a runtime coverag
 tool (`dotnet test --collect:"XPlat Code Coverage"`) or cite an existing coverage
 audit; do not substitute the structural number.
 
-### Dimension 3: Dead Code
+### Dimension 5: Dead Code
+
+Tool: MCP `find_dead_code(scope: "solution", kind: "all", maxResults: 50)`.
 
 Grade on `high`-confidence symbols. `conventionFiltered` reports symbols the tool
 excluded because a reference search cannot see how they are bound (EF entity
@@ -72,7 +119,9 @@ which convention their name matches; verify before removing.
 | D | 16-25 |
 | F | 25+ |
 
-### Dimension 4: API Surface
+### Dimension 6: API Surface
+
+Tools: MCP `get_public_api` (design review), `find_references` (overexposure).
 
 | Grade | Criteria |
 |-------|----------|
@@ -102,7 +151,7 @@ missing auth attributes.
 
 For a deep dive, run `/security-scan` — this dimension is a spot check.
 
-### Dimension 6: Documentation
+### Dimension 8: Documentation
 
 Scan: XML docs on public APIs; README existence and currency.
 

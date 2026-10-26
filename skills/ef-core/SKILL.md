@@ -207,7 +207,7 @@ dotnet ef migrations add AddOrderIndex --project src/MyApp.Infrastructure --star
 # Check for data loss, index strategy, constraint names
 
 # Apply to development database
-dotnet ef database update --project src/MyApp.Infrastructure --startup-project src/MyApp.Api
+dotnet ef database update --project src/RaTemplate.Persistence --startup-project src/RaTemplate.Api
 
 # Generate SQL script for production
 dotnet ef migrations script --idempotent --output migrations.sql

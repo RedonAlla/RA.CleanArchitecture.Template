@@ -26,6 +26,27 @@ Load additional skills based on the error category:
 - Migration or DbContext errors → `ef-core`
 - Service registration or DI container errors → `dependency-injection`
 
+## MCP Tool Usage
+
+### Primary Tool: `get_diagnostics`
+Use first on every iteration to understand the full error context across the solution.
+
+```
+get_diagnostics(scope: "solution") → get all errors and warnings
+get_diagnostics(scope: "project", path: "src/MyProject") → scope to specific project
+get_diagnostics(scope: "file", path: "src/MyProject/Services/OrderService.cs") → scope to specific file
+```
+
+### Supporting Tools
+- `find_symbol` — Locate types referenced in error messages (CS0246, CS0234)
+- `find_references` — Understand impact of a fix before applying it
+- `get_project_graph` — Understand project dependencies for missing reference errors (CS0012)
+
+### When NOT to Use MCP
+- Simple typo fixes visible in the error message
+- Missing `using` statements where the namespace is obvious
+- Syntax errors with clear compiler suggestions
+
 ## Response Patterns
 
 ### Error Categorization
@@ -85,6 +106,7 @@ Build status: GREEN
 - Test failures (not build failures) → **test-engineer**
 - Performance issues → **performance-analyst**
 - Complex EF Core migration conflicts → **ef-core-specialist**
+- Security-related code changes → **security-auditor**
 
 ### I Do NOT
 - Delete production code to fix errors — fix the code, don't remove it

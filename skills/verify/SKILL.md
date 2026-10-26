@@ -27,6 +27,8 @@ The pipeline answers one question: **"Is this code ready for review?"**
 | Phase | Tool | What It Catches | Critical |
 |-------|------|-----------------|----------|
 | 1. Build | `dotnet build` | Compilation errors, missing references | Yes |
+| 2. Diagnostics | `get_diagnostics` (MCP) | New analyzer warnings, nullability issues | FAIL on new errors |
+| 3. Antipatterns | `detect_antipatterns` (MCP) | async void, sync-over-async, `DateTime.Now`, more | No |
 | 4. Tests | `dotnet test` | Failing tests, regressions | Yes |
 | 5. Security | `dotnet list package --vulnerable` + scan | Secrets, SQL injection, missing auth, vulnerable packages | FAIL on critical/high |
 | 6. Format | `dotnet format --verify-no-changes` | Style drift, formatting inconsistencies | No |
@@ -69,7 +71,17 @@ dotnet build --no-restore --verbosity quiet
 - Capture the warning count even on PASS; new warnings are tracked in Phase 2.
 - Output: PASS (0 errors) or FAIL (with error list)
 
-### Phase 2: Antipattern Detection
+### Phase 2: Diagnostics
+
+Use the Roslyn MCP `get_diagnostics` tool, scoped to changed files/projects
+(full solution for cross-cutting changes). Compare against baseline -- flag only
+NEW warnings introduced by the current changes. Common findings: CS8600/CS8602
+(nullability), CS0219 (unused variable).
+
+Output: PASS (0 new) / WARN (new warnings) / FAIL (new errors). Treat new
+warnings as work -- today's CS8600 is next month's production NullReferenceException.
+
+### Phase 3: Antipattern Detection
 
 Use the Roslyn MCP `detect_antipatterns` tool on changed files (full project for
 broad changes). Catches: `async void`, sync-over-async (`.Result`,
@@ -79,7 +91,7 @@ missing `CancellationToken`, EF read queries without `AsNoTracking`.
 
 Output: PASS (0 findings) / WARN (findings) / FAIL (critical antipatterns)
 
-### Phase 3: Tests (CRITICAL -- short-circuits)
+### Phase 4: Tests (CRITICAL -- short-circuits)
 
 ```bash
 dotnet test --no-build --verbosity quiet

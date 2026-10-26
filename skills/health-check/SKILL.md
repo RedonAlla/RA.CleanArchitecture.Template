@@ -10,13 +10,13 @@ description: >
   "technical assessment", "codebase review", "report card".
 ---
 
-# /health-check — 7-Dimension Project Assessment
+# /health-check — 8-Dimension Project Assessment
 
 ## What
 
-Runs a data-driven health assessment across 7 dimensions, each graded A-F with
+Runs a data-driven health assessment across 8 dimensions, each graded A-F with
 the specific data points that produced the grade, and rolls them into a GPA.
-Gut feeling is not a grade: every dimension CLI commands, and
+Gut feeling is not a grade: every dimension uses MCP tools or CLI commands, and
 every grade below A comes with specific, prioritized, effort-estimated fixes —
 "add test classes for OrderService, PaymentProcessor, ShippingCalculator" is
 actionable; "improve test coverage" is not.
@@ -57,6 +57,11 @@ per dimension. For deep code-quality dimensions, delegate to the
 | # | Dimension | Data source |
 |---|-----------|-------------|
 | 1 | Build Health | `dotnet build --no-restore` — errors + warnings |
+| 2 | Code Quality | MCP `detect_antipatterns` — read `summary`, grade high-confidence only |
+| 3 | Architecture | MCP `get_project_graph` + `detect_circular_dependencies` (projects AND types) |
+| 4 | Test Coverage | MCP `get_test_coverage_map` — **check `applicable` first** (structural, not line coverage) |
+| 5 | Dead Code | MCP `find_dead_code(scope: "solution")` — grade high-confidence; ignore `conventionFiltered` |
+| 6 | API Surface | MCP `get_public_api` + `find_references` — overexposure, return-type consistency |
 | 7 | Security Posture | `dotnet list package --vulnerable --include-transitive` + secrets/auth spot check (deep dive: `/security-scan`) |
 | 8 | Documentation | XML doc coverage on public APIs + README currency |
 

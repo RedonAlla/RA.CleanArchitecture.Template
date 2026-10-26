@@ -14,8 +14,9 @@ description: >
 
 1. **Observe before enforcing** — Never impose conventions without first analyzing the existing codebase. A project with 200 `internal sealed class` handlers should not get a new `public class` handler. Detect first, then match.
 2. **Project conventions override generic rules** — If the project uses `*Service` instead of `*Handler`, follow the project's convention even if the kit default is different. Explicit `.editorconfig` and `Directory.Build.props` rules always win.
-3. **Document findings** — After detecting conventions, suggest adding them to the project's CLAUDE.md. Undocumented conventions are lost when the original developers leave.
-4. **Consistency over perfection** — A project with consistent `snake_case` database columns is better than a project with half `snake_case` and half `PascalCase`. Match the existing pattern, even if another convention is theoretically superior.
+3. **Use MCP tools for analysis** — `get_public_api` reveals naming patterns, `get_project_graph` shows structure conventions, `detect_antipatterns` tracks quality trends. Tools provide objective data; file reads provide confirmation.
+4. **Document findings** — After detecting conventions, suggest adding them to the project's CLAUDE.md. Undocumented conventions are lost when the original developers leave.
+5. **Consistency over perfection** — A project with consistent `snake_case` database columns is better than a project with half `snake_case` and half `PascalCase`. Match the existing pattern, even if another convention is theoretically superior.
 
 ## Patterns
 
@@ -23,14 +24,35 @@ description: >
 
 Systematic analysis to understand a project's coding conventions. Run this when joining an existing project or before generating new code.
 
-**Step 1: Folder Structure Patterns**
+**Step 1: Project Structure Analysis**
+```
+→ get_project_graph
+  Detect:
+  - Project naming: PascalCase? Dots? (MyApp.Domain vs Domain)
+  - Layer organization: by layer (Domain/Application/Infrastructure) or by feature?
+  - Test project naming: *.Tests, *.UnitTests, *.IntegrationTests?
+  - Shared project: Common/, Shared/, BuildingBlocks/?
+```
+
+**Step 2: Type Naming Patterns**
+```
+→ get_public_api (on 3-5 key types across different layers)
+  Detect:
+  - Class modifiers: sealed? internal? internal sealed?
+  - Interface prefix: I* (standard) or no prefix?
+  - Suffix conventions: Handler, Service, Repository, Validator, Endpoint?
+  - Record usage: for DTOs? for value objects? for commands/queries?
+  - Primary constructor usage: consistently? selectively?
+```
+
+**Step 3: Folder Structure Patterns**
 Scan the file system for structural conventions:
 - Feature folders: `Features/{FeatureName}/` with all files together?
 - Layer folders: `Controllers/`, `Services/`, `Repositories/` separate?
 - Shared patterns: `Common/`, `Extensions/`, `Middleware/`?
 - Configuration location: root? `Config/` folder? `Infrastructure/`?
 
-**Step 2: Configuration Detection**
+**Step 4: Configuration Detection**
 Check for explicit convention enforcers:
 
 ```
@@ -49,7 +71,7 @@ Check for explicit convention enforcers:
   - Roll-forward policy?
 ```
 
-**Step 3: Build Convention Summary**
+**Step 5: Build Convention Summary**
 Compile findings into a structured summary:
 
 ```markdown

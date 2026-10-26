@@ -1,13 +1,21 @@
 ---
 name: code-review
-description: Review pending changes against the Clean Architecture template's conventions — layer boundaries, Result-based error handling, slice structure, validation, endpoints, and test coverage. Use when the user asks to review changes, check conventions, or audit a feature before committing.
+description: >
+  MCP-powered multi-dimensional code review for .NET projects. Uses Roslyn
+  analysis tools for antipatterns, diagnostics, references, and dependency
+  graphs combined with structured manual review. Prioritizes effort with
+  blast-radius scoring — data access, security, concurrency, and integration
+  boundaries before style — and produces severity-categorized findings with
+  actionable fixes. Use when: "review", "code review", "PR review", "review
+  this", "review my code", "check code quality", "review changes", "what
+  should I review", "review priorities", "blast radius", "critical path".
 ---
 
 # /code-review — MCP-Powered Code Review
 
 ## What
 
-Performs a multi-dimensional code review analysis with
+Performs a multi-dimensional code review combining Roslyn MCP analysis with
 structured manual review. Effort follows the 80/20 rule: the 20% of code that
 causes 80% of incidents (data access, security, concurrency, integration
 boundaries) gets thorough review; style and formatting are left to tooling.
@@ -40,29 +48,34 @@ line count. A one-line middleware change outranks a 300-line rename.
 | Medium | New feature following existing patterns, bug fix, new endpoint | Standard — checklist pass |
 | Low | Docs, formatting, renames, logging statements | Glance — build + tests pass |
 
-### Step 2: Architecture Compliance
+### Step 2: MCP Analysis (before reading any file)
+
+```
+detect_antipatterns(projectFilter: "affected-project")   → async void, DateTime.Now, new HttpClient(), broad catch
+get_diagnostics(scope: "project", path: "affected-project") → new warnings, nullability issues
+```
+
+Distinguish newly introduced findings from pre-existing ones — focus on new.
+
+### Step 3: Blast Radius Verification
+
+For each modified public API:
+
+```
+find_references(symbolName: "ModifiedType")              → count consumers; high count = high risk
+get_dependency_graph(symbolName: "ModifiedMethod", depth: 2) → ripple effects
+```
+
+Check whether callers handle changed return types and new error cases.
+
+### Step 4: Architecture Compliance
 
 Verify dependency direction (Domain → nothing; Infrastructure → Application →
-Domain). Per architecture: Clean Architecture domain has
-zero project references;
-
-## Checklist
-
-### Layer boundaries (violations are blockers)
-- `RaTemplate.Domain` references nothing — no EF Core, no Application/Infrastructure/Web.Api types.
-- `RaTemplate.Api.Contracts` references nothing contains Requests Responses for `RaTemplate.Api`.
-- `RaTemplate.Application` references `RaTemplate.Domain` only; data access exclusively through `IApplicationDbContext`; no `using Infrastructure.*` anywhere in Application.
-- Persistence details (keys, conversions, relationships) live in Infrastructure `IEntityTypeConfiguration<>` classes, not on entities.
-- `RaTemplate.Persistence` and `RaTemplate.Integration` are siblings — neither references the other, and both depend only on
-`RaTemplate.Application`. `RaTemplate.Infrastructure` exists solely to give `RaTemplate.Api` a single wiring entry point.
-- `RaTemplate.Api` endpoints contain no business logic — only request→command mapping and result matching.
-
-### Slice structure
-- One folder per use case under `src/RaTemplate.Application/{Feature}/{UseCase}/`; the endpoint mirrors it at `src/RaTemplate.Api/Endpoints/{Feature}/{UseCase}.cs`.
-- Naming: `{Verb}{Entity}` / `Get{X}` / `...Handler` / `...Validator` / `{X}Output`.
-- Handlers are `internal sealed` with primary constructors, implementing the custom `ICommandHandler<>`/`IQueryHandler<>` — no MediatR, no manual DI registration for handlers/validators/endpoints.
-- Response DTOs are per-slice; queries project with `.Select(...)` and never return domain entities.
-
+Domain) via `get_project_graph` and `detect_circular_dependencies`. Per
+architecture: VSA features don't cross-reference; Clean Architecture domain has
+zero project references; Modular Monolith modules communicate only via
+integration events — `find_references` on a module's DbContext should resolve
+only inside that module.
 
 ### Step 5: Manual Review — Priority Order
 
@@ -108,7 +121,8 @@ bury a security bug under naming nits.
 - [Always include — reinforce good patterns]
 ```
 
-**Quick review** (1-2 files, low blast radius): read for correctness, output Summary + Issues + What's Good.
+**Quick review** (1-2 files, low blast radius): run `detect_antipatterns` +
+`get_diagnostics`, read for correctness, output Summary + Issues + What's Good.
 
 ## Example
 

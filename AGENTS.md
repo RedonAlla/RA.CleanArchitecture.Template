@@ -1,5 +1,6 @@
 # Agent Routing & Orchestration
 
+> This file defines how Claude Code routes queries to specialist agents and how agents coordinate.
 
 ## Agent Roster
 
@@ -11,7 +12,7 @@
 | test-engineer | `agents/test-engineer.md` | Test strategy, xUnit, WebApplicationFactory, Testcontainers |
 | security-auditor | `agents/security-auditor.md` | Authentication, authorization, OWASP, secrets |
 | performance-analyst | `agents/performance-analyst.md` | Benchmarks, memory, async patterns, caching |
-<!-- | devops-engineer | `agents/devops-engineer.md` | Docker, CI/CD, Aspire, deployment | -->
+| devops-engineer | `agents/devops-engineer.md` | Docker, CI/CD, Aspire, deployment |
 | code-reviewer | `agents/code-reviewer.md` | Multi-dimensional code review |
 | build-error-resolver | `agents/build-error-resolver.md` | Autonomous build error fixing |
 | refactor-cleaner | `agents/refactor-cleaner.md` | Systematic dead code removal and cleanup |
@@ -59,16 +60,43 @@ Agents load skills in dependency order. Core skills load first.
 
 | Agent | Skills |
 |-------|--------|
-| dotnet-architect | modern-csharp, architecture-advisor, project-structure. |
+| dotnet-architect | modern-csharp, architecture-advisor, project-structure, scaffold, project-setup + conditional: vertical-slice, clean-architecture, ddd |
 | api-designer | modern-csharp, minimal-api, api-versioning, authentication, error-handling |
 | ef-core-specialist | modern-csharp, ef-core, configuration, migrate |
 | test-engineer | modern-csharp, testing |
 | security-auditor | modern-csharp, authentication, configuration |
 | performance-analyst | modern-csharp, caching |
 | devops-engineer | modern-csharp, docker, ci-cd, aspire |
-| code-reviewer | modern-csharp, code-review, convention-learner + contextual (loads relevant skills incl. clean-architecture) |
+| code-reviewer | modern-csharp, code-review, convention-learner + contextual (loads relevant skills incl. clean-architecture, ddd based on files under review) |
 | build-error-resolver | modern-csharp, build-fix + contextual: ef-core, dependency-injection |
 | refactor-cleaner | modern-csharp, de-sloppify + contextual: testing, ef-core |
+
+## MCP Tool Preferences
+
+Agents should **prefer Roslyn MCP tools over file scanning** to reduce token consumption.
+
+| Task | Use MCP Tool | Instead Of |
+|------|-------------|-----------|
+| Find where a type is defined | `find_symbol` | Grep/Glob across all .cs files |
+| Find all usages of a type | `find_references` | Grep for the type name |
+| Find implementations of an interface | `find_implementations` | Searching for `: IInterface` |
+| Understand inheritance | `get_type_hierarchy` | Reading multiple files |
+| Understand project dependencies | `get_project_graph` | Parsing .csproj files manually |
+| Review a type's API surface | `get_public_api` | Reading the full source file |
+| Check for compilation errors | `get_diagnostics` | Running `dotnet build` and parsing output |
+| Find unused code for cleanup | `find_dead_code` | Manual inspection of all files |
+| Check for circular dependencies | `detect_circular_dependencies` | Manually tracing project references |
+| Understand method call chains | `get_dependency_graph` | Reading multiple files and tracing calls |
+| Check which types have tests | `get_test_coverage_map` | Manually searching for test files |
+| Scan for .NET anti-patterns | `detect_antipatterns` | Manual code review across files |
+| Find all callers of a method | `find_callers` | Grep for the method name |
+| Find overrides of a virtual/abstract method | `find_overrides` | Searching for the `override` keyword |
+| Get full signature, params, and XML docs | `get_symbol_detail` | Reading the entire source file |
+| Read ONE method/member body | `get_symbol_source` | Reading the whole file for one method |
+| See what's in a file before reading it | `get_file_outline` | Reading the file top to bottom |
+| Audit NuGet packages and versions | `get_nuget_packages` | Parsing csproj/props files manually |
+| Map routes and endpoint auth posture | `get_endpoint_map` | Grepping Map*/controller attributes |
+| Audit DI lifetimes, duplicates, captive deps | `get_di_registrations` | Reading Program.cs and extension methods |
 
 ## Cross-Agent Meta Skills
 
@@ -107,7 +135,9 @@ Each workflow skill registers its own slash command and carries its methodology 
 | `/spec` | — | — | Relentless questioning → agreed spec in `docs/specs/` |
 | `/plan` | architecture-advisor | dotnet-architect | Architecture-aware planning (consumes approved specs) |
 | `/verify` | — | — | 7-phase verification pipeline |
-| `/code-review` | convention-learner | code-reviewer | blast-radius-prioritized code review |
+| `/tdd` | testing | test-engineer | Red-green-refactor workflow |
+| `/scaffold` | — | dotnet-architect | Architecture-aware feature scaffolding |
+| `/code-review` | convention-learner | code-reviewer | MCP-powered, blast-radius-prioritized code review |
 | `/build-fix` | — | build-error-resolver | Bounded build-fix and test-fix loops |
 | `/checkpoint` | — | — | Mid-session save (commit + handoff) |
 | `/security-scan` | — | security-auditor | OWASP + secrets + dependency audit |
@@ -133,9 +163,9 @@ When two agents could handle a query:
 
 For detailed context management strategies, see the **`workflow-mastery`** skill (Context Discipline section).
 
-- **Small queries** (single pattern/fix): Load 1-2 skills
-- **Medium queries** (feature implementation): Load 3-4 skills, read CLAUDE.md to underspend existing code
-- **Large queries** (architecture review): Load all relevant skills, read all repository first to understand the solution shape
+- **Small queries** (single pattern/fix): Load 1-2 skills, use MCP tools for context
+- **Medium queries** (feature implementation): Load 3-4 skills, use MCP tools to understand existing code
+- **Large queries** (architecture review): Load all relevant skills, use `get_project_graph` first to understand the solution shape
 
 ## Response Patterns
 
@@ -144,3 +174,4 @@ All agents should:
 2. **Show code first, explain after** — Developers prefer seeing the solution, then understanding why
 3. **Flag anti-patterns proactively** — If the user's existing code has issues, mention them
 4. **Reference skills** — Point to relevant skills for deeper reading
+5. **Use MCP tools before reading files** — Reduce token consumption

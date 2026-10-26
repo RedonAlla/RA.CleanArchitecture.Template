@@ -3,7 +3,7 @@ name: outdated
 description: >
   Dependency health report for .NET solutions: outdated NuGet packages,
   vulnerable versions, and commercial-license traps (MediatR, MassTransit,
-  FluentAssertions, AutoMapper).
+  FluentAssertions, AutoMapper) — powered by the get_nuget_packages MCP tool.
   Invoke when: "outdated packages", "check dependencies", "stale packages",
   "package audit", "dependency health", "are my packages up to date",
   "license check", "vulnerable packages", "nuget audit".
@@ -16,7 +16,8 @@ description: >
 A three-layer dependency health report:
 
 1. **Inventory** — every `PackageReference` per project, with TFMs and central
-   package management awareness.
+   package management awareness, via the `get_nuget_packages` MCP tool (no
+   network, token-cheap).
 2. **Staleness + vulnerabilities** — current vs latest stable, and known CVEs,
    via the `dotnet` CLI.
 3. **License screen** — flags packages that moved to commercial licenses so an
@@ -36,7 +37,18 @@ second, staleness last — with a recommended action per row.
 
 ## How
 
-**Step 1: Staleness and vulnerabilities (CLI)**
+**Step 1: Inventory (MCP, no network)**
+
+```
+get_nuget_packages()                          -- whole solution
+get_nuget_packages(projectFilter: "Api")      -- or one project
+```
+
+Returns per-project `{Name, TargetFramework, Cpm, Packages: [{Id, Version}]}`.
+Note `Cpm: true` — updates then belong in `Directory.Packages.props`, not the
+csproj. Flag mixed TFMs across projects while you're here.
+
+**Step 2: Staleness and vulnerabilities (CLI)**
 
 ```bash
 dotnet list package --outdated
@@ -46,7 +58,7 @@ dotnet list package --vulnerable --include-transitive
 Both need a successful restore first. If restore fails, fix that before
 auditing — a broken lock state makes version output unreliable.
 
-**Step 2: License screen**
+**Step 3: License screen**
 
 Check the inventory against the known commercial moves (full rationale in
 `knowledge/package-recommendations.md`):
@@ -61,7 +73,7 @@ Check the inventory against the known commercial moves (full rationale in
 A license flag fires when the project is on the free major and a naive
 "update all" would cross the boundary — that is the trap this step exists for.
 
-**Step 3: Report**
+**Step 4: Report**
 
 One table, priority-ordered:
 
@@ -72,11 +84,16 @@ One table, priority-ordered:
 | MAJOR | Behind a major (breaking changes likely) | One at a time, release notes first |
 | MINOR/PATCH | Routine drift | Batch patches; minors one at a time |
 
-**Step 4: Act (optional)**
+**Step 5: Act (optional)**
 
 Offer to execute updates via `/migrate` Flow C — one package at a time,
 `dotnet build && dotnet test` between each. Never batch major updates:
 batched failures are unattributable.
+
+### MCP Tools Used
+
+- `get_nuget_packages` — inventory, CPM detection, TFM audit
+- `get_diagnostics` — verify the solution still compiles clean after updates
 
 ## Example
 

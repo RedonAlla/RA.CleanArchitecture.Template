@@ -2,7 +2,8 @@
 name: plan
 description: >
   Enter plan mode for .NET projects with architecture awareness. Analyzes tasks
-  through the lens of Clean Architecture and produces structured implementation plans before any code
+  through the lens of supported architectures (VSA, Clean Architecture, DDD,
+  Modular Monolith) and produces structured implementation plans before any code
   is written. Use when: "plan", "let's plan", "think through", "design this",
   "how should I implement", or any non-trivial task requiring 3+ steps.
 ---
@@ -56,6 +57,7 @@ Use the `architecture-advisor` skill to determine the project's architecture:
 Identify every layer, module, and boundary the task touches:
 - Which projects/folders will have new or modified files?
 - Are there cross-cutting concerns (auth, caching, validation, logging)?
+- What existing code will be impacted? Use `find_references` and `find_callers` MCP tools for blast radius.
 - Are there database migrations needed?
 
 ### Step 4: Produce the Plan

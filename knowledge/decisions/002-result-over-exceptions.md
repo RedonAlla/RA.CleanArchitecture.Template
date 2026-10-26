@@ -50,7 +50,7 @@ The .NET ecosystem has traditionally relied on exceptions for all error handling
 
 ## Decision
 
-**dotnet-claude-kit uses the Result pattern as the default approach for handling expected failures. Exceptions are reserved for truly exceptional, unexpected situations.**
+**project uses the Result pattern as the default approach for handling expected failures. Exceptions are reserved for truly exceptional, unexpected situations.**
 
 ### What constitutes an "expected failure"
 
@@ -71,65 +71,26 @@ The .NET ecosystem has traditionally relied on exceptions for all error handling
 
 ### Implementation approach
 
-dotnet-claude-kit does not mandate a specific Result library. The recommended pattern is a lightweight, project-owned `Result<T>` type:
-
-```csharp
-public sealed record Error(string Code, string Description)
-{
-    public static Error NotFound(string entity, Guid id) =>
-        new($"{entity}.NotFound", $"{entity} with ID {id} was not found.");
-
-    public static Error Validation(string description) =>
-        new("Validation", description);
-
-    public static Error Conflict(string description) =>
-        new("Conflict", description);
-}
-
-public class Result
-{
-    public bool IsSuccess { get; }
-    public Error? Error { get; }
-
-    protected Result(bool isSuccess, Error? error)
-    {
-        IsSuccess = isSuccess;
-        Error = error;
-    }
-
-    public static Result Success() => new(true, null);
-    public static Result Failure(Error error) => new(false, error);
-    public static Result<T> Success<T>(T value) => new(value, true, null);
-    public static Result<T> Failure<T>(Error error) => new(default, false, error);
-}
-
-public class Result<T> : Result
-{
-    public T? Value { get; }
-
-    internal Result(T? value, bool isSuccess, Error? error)
-        : base(isSuccess, error) => Value = value;
-}
-```
-
-Teams may substitute `FluentResults`, `ErrorOr`, or `Ardalis.Result` if they prefer a library with more features (railway-oriented programming, multiple errors, etc.).
+Project uses package `RA.Utilities.Core.Results` as Result library.
+https://redonalla.github.io/RA.Utilities/nuget-packages/core/RA.Utilities.Core.Results/
 
 ### Mapping Results to HTTP responses
 
+Ass Mapping failure results to HTTP Api response use `RA.Utilities.Api.Mapper` from package `RA.Utilities.Api`
+
 ```csharp
-public static class ResultExtensions
+// Api/Features/Products/ProductEndpoints.cs
+app.MapGet("/products/{id}", (int id, ProductService service) => 
 {
-    public static IResult ToProblemDetails(this Result result) =>
-        result.IsSuccess
-            ? Results.Ok()
-            : result.Error!.Code switch
-            {
-                var code when code.EndsWith(".NotFound") => Results.NotFound(result.Error),
-                "Validation" => Results.BadRequest(result.Error),
-                "Conflict" => Results.Conflict(result.Error),
-                _ => Results.Problem(result.Error.Description)
-            };
-}
+    Result<Product> result = service.GetProductById(id);
+    
+    // The Match method handles both success and failure outcomes.
+    // The `ErrorResultResponse.Result` method is passed directly to the failure delegate.
+    return result.Match<IResult>(
+        success: product => SuccessResult.Ok(product),
+        failure: ErrorResultResponse.Result 
+    );
+});
 ```
 
 ## Consequences

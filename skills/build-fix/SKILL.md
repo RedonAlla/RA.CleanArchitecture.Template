@@ -115,10 +115,17 @@ run nested build-fix and test-fix loops). Nested loops get a smaller budget
 
 ## Invokes
 
-| Type  | Name               | Purpose                                    |
-|-------|--------------------|--------------------------------------------|
-| Skill | `instinct-system`  | Capture fix patterns in MEMORY.md          |
-| Agent | `dotnet-architect` | Consulted for architectural error patterns |
+| Type  | Name                   | Purpose                                    |
+|-------|------------------------|--------------------------------------------|
+| Skill | `instinct-system` | Capture fix patterns in MEMORY.md          |
+| Agent | `dotnet-architect`     | Consulted for architectural error patterns |
+
+### MCP Tools Used
+
+- `get_diagnostics` — Compiler errors/warnings scoped to file or project
+- `find_symbol` — Locate moved or renamed types
+- `find_references` — Assess blast radius of a broken API change
+- `get_project_graph` — Dependency order for fixing reference errors
 
 ## Example
 

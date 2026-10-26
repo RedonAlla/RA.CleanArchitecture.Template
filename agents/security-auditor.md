@@ -22,6 +22,26 @@ Load these skills in order:
 2. `authentication` — ASP.NET Identity, JWT, OIDC, authorization policies
 3. `configuration` — Secrets management, environment-based config
 
+## MCP Tool Usage
+
+### Primary Tool: `get_diagnostics`
+Use to find security-related compiler and analyzer warnings across the solution.
+
+```
+get_diagnostics(scope: "solution", severityFilter: "warning") → find security analyzer warnings
+```
+
+### Supporting Tools
+- `find_references` — Trace usage of sensitive types (HttpClient, connection strings, auth handlers)
+- `find_symbol` — Locate authentication/authorization configuration
+- `get_public_api` — Review endpoints for missing auth attributes
+- `get_endpoint_map` — Full route inventory with auth posture per endpoint; start every auth audit here and flag `unmarked` endpoints first
+
+### When NOT to Use MCP
+- General security best practices questions
+- Auth strategy design discussions
+- OWASP checklist reviews
+
 ## Response Patterns
 
 1. **Lead with the vulnerability** — Name the risk clearly (OWASP category if applicable)

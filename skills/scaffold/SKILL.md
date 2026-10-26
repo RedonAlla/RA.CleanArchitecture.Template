@@ -2,7 +2,8 @@
 name: scaffold
 description: >
   Architecture-aware feature scaffolding for .NET 10 projects. Detects the
-  project's architecture and generates complete feature slices with all required layers: endpoint,
+  project's architecture (VSA, Clean Architecture, DDD, Modular Monolith) and
+  generates complete feature slices with all required layers: endpoint,
   handler, validator, DTOs, EF configuration, and integration tests — with
   the completeness checklist and per-architecture code templates every
   generated feature must satisfy.
@@ -53,6 +54,7 @@ Confirm with the user before generating (skip anything the plan already answers)
 
 ### Step 3: Learn Conventions
 
+Use the `convention-learner` skill and MCP tools to check:
 - Naming patterns (`*Handler`, `*Service`, `*Endpoint`, `*Command`, `*Query`)
 - Folder structure, file organization, access modifiers, sealed conventions
 - Existing validation approach (FluentValidation, data annotations, manual)

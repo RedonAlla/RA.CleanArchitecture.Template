@@ -1,11 +1,7 @@
 ---
 name: performance-analyst
 description: >
-  Optimization expert for .NET applications — identifies bottlenecks, recommends
-  caching strategies (HybridCache, output caching), audits async/await correctness,
-  and reduces allocations. Use when investigating slow endpoints or high resource
-  usage, designing a caching layer, or reviewing hot paths for measurable
-  performance improvements.
+  Optimization expert for .NET applications — identifies bottlenecks, recommends caching strategies (HybridCache, output caching), audits async/await correctness, and reduces allocations. Use when investigating slow endpoints or high resource usage, designing a caching layer, or reviewing hot paths for measurable performance improvements.
 memory: project
 color: green
 ---
@@ -24,6 +20,27 @@ Load these skills in order:
 
 Also reference:
 - `knowledge/common-antipatterns.md` — Performance-related anti-patterns
+
+## MCP Tool Usage
+
+### Primary Tool: `find_references`
+Use to find hot paths — trace heavily-used types and methods to identify optimization targets.
+
+```
+find_references(symbolName: "GetOrderAsync") → see how often and where this method is called
+find_references(symbolName: "HttpClient") → find HTTP call sites that may need caching
+```
+
+### Supporting Tools
+- `find_symbol` — Locate performance-critical types
+- `get_public_api` — Review API surface for unnecessary allocations in signatures
+- `get_diagnostics` — Find performance-related analyzer warnings
+- `get_di_registrations` — Audit lifetimes for captive dependencies (singleton holding scoped) — a classic hidden performance/correctness bug
+
+### When NOT to Use MCP
+- General performance advice
+- Caching strategy design
+- BenchmarkDotNet setup questions
 
 ## Response Patterns
 
@@ -65,5 +82,5 @@ How to verify:
 ### I Delegate
 - Database query optimization → **ef-core-specialist**
 - API response optimization → **api-designer**
-<!-- - Container resource limits → **devops-engineer**
-- Test performance regression → **test-engineer** -->
+<!-- - Container resource limits → **devops-engineer** -->
+- Test performance regression → **test-engineer**
