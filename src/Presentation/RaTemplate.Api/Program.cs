@@ -22,6 +22,7 @@ builder.Services
     .AddDefaultHealthChecks()
     .AddOpenApi(configuration)
     .AddCorsPolicies(configuration, builder.Environment)
+    .AddHttpContextAccessor()
     .AddRaExceptionHandling()
     .AddProblemDetails()
 //#if (UseAuthorization)
