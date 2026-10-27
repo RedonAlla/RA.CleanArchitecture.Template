@@ -20,6 +20,7 @@ builder.AddLoggingWithConfiguration();
 builder.Services
     .Configure<JsonOptions>(options => options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()))
     .AddDefaultHealthChecks()
+    .AddApiVersioningWithExplorer()
     .AddOpenApi(configuration)
     .AddCorsPolicies(configuration, builder.Environment)
     .AddHttpContextAccessor()
@@ -40,10 +41,6 @@ if (app.Environment.IsDevelopment())
     await RaTemplateDbInitializer.InitializeDatabaseAsync(app.Services);
 }
 //#endif
-if (!app.Environment.IsProduction())
-{
-    app.UseOpenApi();
-}
 
 app.MapHealthCheckEndpoints()
    .UseDefaultHeadersMiddleware()
@@ -56,5 +53,10 @@ app.MapHealthCheckEndpoints()
 app.UseAuth();
 //#endif
 app.MapEndpoints();
+
+if (!app.Environment.IsProduction())
+{
+    app.UseOpenApi();
+}
 
 await app.RunAsync();

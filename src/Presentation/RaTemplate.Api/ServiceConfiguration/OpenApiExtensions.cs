@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.Options;
 using RA.Utilities.OpenApi.Extensions;
 using RA.Utilities.OpenApi.Settings;
@@ -24,14 +26,14 @@ internal static class OpenApiExtensions
     private const string FavIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg viewBox='0 0 456.938 360.646' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath style='fill:%23BD0A0A;' d='M 442.13 38.011 C 473.779 89.661 403.778 187.807 285.777 257.224 C 167.775 326.642 46.459 341.045 14.809 289.394 C -16.841 237.744 53.161 139.599 171.162 70.182 C 289.162 0.764 410.48 -13.639 442.13 38.011 Z'/%3E%3Cpath style='fill:%23FFDC0F;stroke:%23000000;stroke-width:10;' d='M 63.688 87.538 C 334.367 1.309 278.975 125.798 215.017 137.791 L 229.179 90.965 L 141.922 114.378 L 53.98 341.657 L 148.775 311.391 L 193.888 189.186 L 381.765 354.219 L 295.536 151.495 C 468.565 53.274 383.604 -58.652 79.107 68.122 L 63.688 87.538 Z'/%3E%3C/svg%3E";
     //#endif
 
-    extension(IServiceCollection services)
+    extension(IApiVersioningBuilder builder)
     {
         /// <summary>
-        /// Registers and configures OpenAPI services from the application's configuration.
+        /// Registers and configures versioned OpenAPI services from the application's configuration.
         /// </summary>
         /// <remarks>
         /// This method binds the <see cref="OpenApiInfoSettings"/> from the configuration section specified by <see cref="OpenApiInfoSettings.AppSettingsKey"/>
-        /// and adds the necessary OpenAPI services to the dependency injection container.
+        /// and registers the API versioning aware OpenAPI services.
         /// <para>
         /// It leverages <c>RA.Utilities.OpenApi</c> to add default document transformers which:
         /// <list type="bullet">
@@ -45,11 +47,12 @@ internal static class OpenApiExtensions
         /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
         public IServiceCollection AddOpenApi(IConfiguration configuration)
         {
-            services
-                .Configure<OpenApiInfoSettings>(configuration.GetSection(OpenApiInfoSettings.AppSettingsKey))
-                .AddOpenApi(options => options.AddDefaultsDocumentTransformer());
+            builder.Services.Configure<OpenApiInfoSettings>(
+                configuration.GetSection(OpenApiInfoSettings.AppSettingsKey));
 
-            return services;
+            builder.AddOpenApi(options => options.Document.AddDefaultsDocumentTransformer());
+
+            return builder.Services;
         }
     }
 
@@ -71,7 +74,7 @@ internal static class OpenApiExtensions
         /// </remarks>
         public void UseOpenApi()
         {
-            app.MapOpenApi();
+            app.MapOpenApi().WithDocumentPerVersion();
 
             //#if (UseScalarUI || UseSwaggerUI)
             OpenApiInfoSettings openApiSettings =
@@ -81,6 +84,16 @@ internal static class OpenApiExtensions
             //#if (UseScalarUI)
             app.MapScalarApiReference("/openapi-ui", options =>
             {
+                IReadOnlyList<ApiVersionDescription> descriptions = app.DescribeApiVersions();
+
+                for (int i = 0; i < descriptions.Count; i++)
+                {
+                    options.AddDocument(
+                        descriptions[i].GroupName,
+                        isDefault: i == descriptions.Count - 1
+                    );
+                }
+
                 options.Title = openApiSettings.Title ?? Title;
                 options.DarkMode = false;
                 options.Favicon = FavIcon;
