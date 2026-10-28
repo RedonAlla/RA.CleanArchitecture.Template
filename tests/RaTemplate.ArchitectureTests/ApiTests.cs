@@ -38,19 +38,20 @@ public class ApiTests
     [Fact]
     public void Endpoints_Should_ReturnTypedResultsWithApiContracts()
     {
-        Type[] endpointTypes = new[] { Assemblies.Api, Assemblies.Application }
+        Type[] endpointTypes = [.. new[] { Assemblies.Api, Assemblies.Application }
             .SelectMany(assembly => assembly.GetTypes())
             .Where(type => type.IsClass && typeof(IEndpoint).IsAssignableFrom(type))
-            .ToArray();
+        ];
 
-        string[] invalidEndpoints = endpointTypes
+        string[] invalidEndpoints = [..
+            endpointTypes
             .SelectMany(endpointType => endpointType
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Where(method => !method.IsSpecialName)
                 .Select(method => new { endpointType, method }))
             .Where(endpoint => !ReturnsTypedApiContract(endpoint.method.ReturnType))
             .Select(endpoint => $"{endpoint.endpointType.FullName}.{endpoint.method.Name}")
-            .ToArray();
+        ];
 
         Assert.True(
             invalidEndpoints.Length == 0,
@@ -103,5 +104,51 @@ public class ApiTests
 
         return type.IsGenericType
             && type.GetGenericArguments().Any(ContainsApiContractType);
+    }
+
+    /// <summary>
+    /// Verifies that endpoint groups are internal and sealed.
+    /// </summary>
+    [Fact]
+    public void EndpointGroups_Should_BeInternalAndSealed()
+    {
+        // Act
+        TestResult testResult = Types
+            .InAssembly(Assemblies.Api)
+            .That()
+            .ImplementInterface(typeof(IEndpointGroup))
+            .Should()
+            .NotBePublic()
+            .And()
+            .BeSealed()
+            .GetResult();
+
+        // Assert
+        Assert.True(
+            testResult.IsSuccessful,
+            $"Endpoint groups must be internal and sealed: {string.Join(", ", testResult.FailingTypeNames ?? [])}");
+    }
+
+    /// <summary>
+    /// Verifies that endpoint are internal and sealed.
+    /// </summary>
+    [Fact]
+    public void Endpoint_Should_BeInternalAndSealed()
+    {
+        // Act
+        TestResult testResult = Types
+            .InAssembly(Assemblies.Api)
+            .That()
+            .ImplementInterface(typeof(IEndpoint))
+            .Should()
+            .NotBePublic()
+            .And()
+            .BeSealed()
+            .GetResult();
+
+        // Assert
+        Assert.True(
+            testResult.IsSuccessful,
+            $"Endpoints must be internal and sealed: {string.Join(", ", testResult.FailingTypeNames ?? [])}");
     }
 }

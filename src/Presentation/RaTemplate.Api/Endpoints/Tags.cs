@@ -1,5 +1,3 @@
-using System;
-
 namespace RaTemplate.Api.Endpoints;
 
 /// <summary>

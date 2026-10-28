@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Asp.Versioning;
+using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Http.Json;
 using RA.Utilities.Api.Extensions;
 //#if (UseAuthorization)
@@ -52,7 +54,13 @@ app.MapHealthCheckEndpoints()
 //#if (UseAuthorization)
 app.UseAuth();
 //#endif
-app.MapEndpoints();
+
+ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1))
+    .ReportApiVersions()
+    .Build();
+
+app.MapEndpoints(apiVersionSet);
 
 if (!app.Environment.IsProduction())
 {
