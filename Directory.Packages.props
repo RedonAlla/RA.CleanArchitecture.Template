@@ -46,7 +46,7 @@
   <ItemGroup>
     <PackageVersion Include="RA.Utilities.Api" Version="10.4.0" />
     <PackageVersion Include="RA.Utilities.Api.Response" Version="10.2.0" />
-    <PackageVersion Include="RA.Utilities.OpenApi" Version="10.2.1" />
+    <PackageVersion Include="RA.Utilities.OpenApi" Version="10.3.0" />
     <PackageVersion Include="RA.Utilities.Logging.Core" Version="10.1.2" />
     <PackageVersion Include="RA.Utilities.Dispatcher" Version="10.0.1" />
     <PackageVersion Include="RA.Utilities.Core.ValueObjects" Version="10.2.0" />
